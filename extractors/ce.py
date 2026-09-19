@@ -60,7 +60,9 @@ def classify_record(row: dict, profile: dict, messages: list[dict]) -> str:
             if row['record_index']!=expected:raise FormatError('Officer source group/index mismatch')
             if group.get('biography_offset') is not None:
                 text=messages[group['biography_offset']+expected]['text']
-                if not text or text=='무효':raise FormatError('Missing named officer biography evidence')
+                missing=not text or text=='무효'
+                documented=row['source_id'] in group.get('biography_missing_ids',[])
+                if missing!=documented:raise FormatError('Officer biography presence differs from measured profile')
             return group['kind']
     raise FormatError(f'Unclassified officer source ID {row["source_id"]}')
 

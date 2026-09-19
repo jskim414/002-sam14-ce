@@ -151,7 +151,15 @@
       "record_start": 1001,
       "kind": "BONUS",
       "label": "추가 무장",
-      "biography_offset": 392
+      "biography_offset": 392,
+      "biography_missing_ids": [
+        2078,
+        2079,
+        2080,
+        2081,
+        2082
+      ],
+      "biography_missing_reason": "Named scenario slots are present but corresponding message strings are empty; classification uses explicit source ID/index group, not inferred biography"
     },
     {
       "source_ids": [
