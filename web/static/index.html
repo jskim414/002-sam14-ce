@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light dark"><title>삼국지14 CE · 무장 참조</title>
+  <link rel="stylesheet" href="/styles.css"><script type="module" src="/app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 이동</a>
+<header class="masthead"><a class="brand" href="/" aria-label="무장 참조 처음으로"><span class="seal">三</span><span>삼국지14 <b>CE</b><small>플레이 곁의 무장 참조</small></span></a><button id="theme" class="icon" aria-label="화면 테마 변경">◐</button></header>
+<div class="review-banner">로컬 검토판 <span>· 일부 데이터는 게임 화면 대조가 필요합니다.</span><button id="coverage">검증 범위</button></div>
+<main id="main">
+  <section class="context"><label for="scenario">시나리오 시작 기준</label><select id="scenario" aria-label="CE 시나리오"></select><p>진행 중인 게임의 현재 상태와 다를 수 있습니다.</p></section>
+  <section class="heading"><div><p class="eyebrow">OFFICER REFERENCE</p><h1 id="page-title">필요한 무장을, 바로.</h1><p id="page-description">능력부터 정책과 인간관계까지 살펴보세요.</p></div></section>
+  <div class="searchbar"><label class="sr-only" for="q">무장 이름 또는 자 검색</label><span aria-hidden="true">⌕</span><input id="q" type="search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggestions" placeholder="무장 이름 또는 자를 입력하세요" autocomplete="off"><button id="filter-open">필터 <span id="filter-count"></span></button></div>
+  <div id="suggestions" role="listbox" aria-label="무장 검색 제안" hidden></div>
+  <div class="quick"><button id="upcoming">등장 예정 모아보기</button><button id="save-search">검색 저장</button><button id="saved-searches">저장한 검색</button><button id="share-page">링크·QR</button></div>
+  <p id="context-status" class="muted" role="status"></p>
+  <div id="quick" class="quick"><button data-state="" aria-pressed="true">전체</button><button data-state="ACTIVE_FORCE">현역</button><button data-state="FREE">재야</button><button data-state="UNAPPEARED">미등장</button></div>
+  <div id="stash-controls" class="quick" hidden><button data-stash="favorites">즐겨찾기</button><button data-stash="recent">최근 조회</button><button id="clear-recent">최근 조회 비우기</button><button id="clear-favorites">즐겨찾기 비우기</button></div>
+  <div id="codex-controls" class="quick" hidden><button data-codex="trait">개성</button><button data-codex="policy">정책</button><button data-codex="formation">진형</button><button data-codex="tactic">전법</button></div>
+  <div class="results-bar"><p id="count" role="status" aria-live="polite">데이터를 불러오는 중입니다.</p><label id="sort-label">정렬 <select id="sort"><option value="name">이름순</option><option value="leadership">통솔 높은순</option><option value="strength">무력 높은순</option><option value="intelligence">지력 높은순</option><option value="politics">정치 높은순</option><option value="charisma">매력 높은순</option><option value="policy_level">정책 레벨순</option><option value="appearance_year">등장 빠른순</option></select></label></div>
+  <p id="error" class="error" role="alert" hidden></p><p id="cache-status" class="error" role="status" hidden></p><button id="retry" hidden>다시 시도</button>
+  <div id="compare-bar" class="quick" hidden><span id="compare-count"></span><button id="compare-open">능력·정책 비교</button><button id="compare-clear">선택 비우기</button></div>
+  <section id="results" class="results" aria-label="검색 결과"></section>
+  <nav id="pagination" class="pagination" aria-label="결과 페이지"><button id="previous">이전</button><span id="page"></span><button id="next">다음</button></nav>
+  <footer><span id="build"></span><span>읽기 전용 · 이 기기에 보관함 저장</span></footer>
+</main>
+<nav class="bottom-nav" aria-label="주요 메뉴"><button data-tab="officers" aria-current="page">무장</button><button data-tab="codex">도감</button><button data-tab="stash">보관함</button></nav>
+<dialog id="filters"><form id="filter-form"><div class="dialog-head"><h2>상세 필터</h2><button type="button" data-close="filters" class="icon" aria-label="필터 닫기">×</button></div><div class="filter-grid">
+<label>세력<select name="force" id="force"><option value="">전체 세력</option></select></label>
+<label>상태<select name="state" id="state"></select></label>
+<label>주의<select name="doctrine" id="doctrine"></select></label><label>정책<select name="policy" id="policy"></select></label>
+<label>최소 정책 레벨<input name="level_min" type="number" min="0" max="255" placeholder="제한 없음"></label>
+<label>개성 (복수 선택)<select name="trait" id="trait" multiple size="5"></select></label><label>개성 조합<select name="trait_mode"><option value="all">선택한 개성 모두 보유</option><option value="any">하나 이상 보유</option></select></label><label>진형<select name="formation" id="formation"></select></label><label>전법<select name="tactic" id="tactic"></select></label>
+<label>무장 분류<select name="kind"><option value="HISTORICAL">사실 무장</option><option value="BONUS">고대·특전 후보</option><option value="ALL">두 분류 모두</option></select></label>
+</div><p class="muted">고대·특전 후보는 파일에 존재하는 목록이며, 계정별 사용 가능 여부는 아직 확인되지 않았습니다.</p><div class="dialog-actions"><button type="button" id="reset-filters">필터 초기화</button><button class="primary" type="submit">결과 보기</button></div></form></dialog>
+<dialog id="detail" aria-label="무장 상세"><div id="detail-content"></div></dialog>
+<dialog id="data-info"><div class="dialog-head"><h2>데이터 검증 범위</h2><button class="icon" data-close="data-info" aria-label="닫기">×</button></div><div id="coverage-content"></div></dialog>
+<dialog id="comparison" aria-label="무장 비교"><div class="dialog-head"><h2>같은 시나리오에서 비교</h2><button class="icon" data-close="comparison" aria-label="비교 닫기">×</button></div><div id="comparison-content"></div></dialog>
+<dialog id="searches-dialog" aria-label="저장한 검색"><div class="dialog-head"><h2>저장한 검색</h2><button class="icon" data-close="searches-dialog" aria-label="닫기">×</button></div><form id="save-search-form"><label>이름 <input id="search-name" maxlength="40" required placeholder="예: 내 세력의 수비 무장"></label><button type="submit">현재 조건 저장</button></form><div id="searches-list"></div></dialog>
+<dialog id="share-dialog" aria-label="현재 조건 공유"><div class="dialog-head"><h2>링크·QR로 이어보기</h2><button class="icon" data-close="share-dialog" aria-label="닫기">×</button></div><p class="muted">다른 기기에서 접속 가능한 CE 서비스 주소를 사용하세요. 현재 localhost 주소는 이 PC에서만 열립니다.</p><label>공유할 서비스 주소 <input id="share-origin" type="url" placeholder="https://ce.example.com" autocomplete="off"></label><button id="make-qr">QR 생성</button><div id="qr-output"></div><p id="share-url" class="evidence"></p><button id="copy-share">링크 복사</button><p id="share-status" class="muted" role="status"></p></dialog>
+</body></html>

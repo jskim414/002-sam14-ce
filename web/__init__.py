@@ -1,0 +1,1 @@
+"""Independent CE reference application."""

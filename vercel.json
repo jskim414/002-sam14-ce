@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "python check_package.py --release",
+  "functions": {"api/index.py": {"excludeFiles": "{package-manifest.json,check_package.py,run.py}"}},
+  "rewrites": [{"source": "/(.*)", "destination": "/api/index"}]
+}

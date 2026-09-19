@@ -1,0 +1,12 @@
+{
+  "name": "sam14-ce-reference",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check web/static/app.js"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
+}

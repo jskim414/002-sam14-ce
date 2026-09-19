@@ -1,0 +1,14 @@
+.artifacts/
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.vercel/
+.env
+.env.*
+*.pem
+*.key
+db/*.db
+db/*.db-*
+reports/*private*

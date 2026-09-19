@@ -1,0 +1,85 @@
+{
+  "profile_key": "ce-ko-build-24966116-r3",
+  "build_id": "24966116",
+  "locale": "ko",
+  "ruleset": "CE",
+  "schema_version": 4,
+  "default_scenario": "ce-05",
+  "release_ready": false,
+  "publication": "LOCAL_REVIEW_ONLY",
+  "source_snapshot": ".artifacts/source-snapshots/ce-ko-build-24966116",
+  "record_layout": {
+    "header_version": 102,
+    "officer_record_size": 316
+  },
+  "static_tables": {
+    "settlement": {
+      "offset": 1000,
+      "size": 53,
+      "count": 52,
+      "section": 1,
+      "name_bytes": 8
+    },
+    "gate": {
+      "offset": 3764,
+      "size": 40,
+      "count": 11,
+      "section": 2,
+      "name_bytes": 8
+    },
+    "formation": {
+      "offset": 185369,
+      "size": 152,
+      "count": 21,
+      "section": 11,
+      "name_bytes": 6,
+      "description_offset": 28,
+      "description_bytes": 80
+    },
+    "doctrine": {
+      "offset": 238708,
+      "size": 102,
+      "count": 11,
+      "section": 17,
+      "name_bytes": 8,
+      "description_offset": 28,
+      "description_bytes": 62
+    },
+    "policy": {
+      "offset": 239838,
+      "size": 148,
+      "count": 121,
+      "section": 18,
+      "name_bytes": 12,
+      "description_offset": 44,
+      "description_bytes": 88
+    },
+    "trait": {
+      "offset": 263629,
+      "size": 170,
+      "count": 356,
+      "section": 22,
+      "name_bytes": 12,
+      "description_offset": 44,
+      "description_bytes": 104
+    },
+    "tactic": {
+      "offset": 188569,
+      "size": 94,
+      "count": 201,
+      "section": 12,
+      "name_bytes": 10
+    }
+  },
+  "blockers": [
+    "특전 시나리오 32·33의 본문 해석 미완료",
+    "원천 추출과 교차 검증 완료 필드의 게임 화면 검증은 사용자 요청으로 제외",
+    "일부 무장·상태·모드·이용권 분류는 의미 검증 필요",
+    "웹 시각 검증 및 Android/iOS 실기기 검증은 사용자 요청으로 제외"
+  ],
+  "personality_evidence": {
+    "source": "https://medaka.5ch.io/test/read.cgi/gamehis/1585043390/699",
+    "encoding": "signed i16 delta, value = raw / 10 + 3",
+    "status": "CROSS_CHECKED_NOT_SCREEN_VERIFIED"
+  }
+}

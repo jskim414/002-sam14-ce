@@ -1,0 +1,16 @@
+.git
+.artifacts
+tests
+plan
+catalog
+profiles
+extractors
+scripts
+reports
+__pycache__
+*.py[cod]
+db/*.db
+node_modules
+docs
+package-lock.json
+package.json

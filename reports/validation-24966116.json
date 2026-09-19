@@ -1,0 +1,25 @@
+{
+  "database_sha256": "5703afccde929492b3bce570c7fdbb6f0e25efbb82cd52f0d13d73c4595faf5d",
+  "structural_pass": true,
+  "checks": {
+    "integrity": true,
+    "foreign_keys": true,
+    "expected_rows": true,
+    "relationship_scope_membership": true,
+    "no_self_relationship": true,
+    "all_personality_rows": true,
+    "unverified_personality_not_fabricated": true,
+    "all_files_classified": true,
+    "source_lineage": true,
+    "policy_reference": true,
+    "doctrine_reference": true
+  },
+  "release_ready": false,
+  "blockers": [
+    "내면 5개 항목의 위치·값 의미 검증 미완료",
+    "특전 시나리오 파일 32·33의 외부 형식 해석 미완료",
+    "일부 무장·상태·모드 분류는 게임 화면 교차 확인 필요",
+    "혼인·의형제와 전법 보유 범위 검증 미완료",
+    "한국어 게임 화면 및 Android/iOS 실기기 검증 미완료"
+  ]
+}

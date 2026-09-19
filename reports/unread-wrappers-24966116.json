@@ -1,0 +1,40 @@
+{
+  "read_only": true,
+  "files": [
+    {
+      "relative_path": "DLC/0010_KO/scedaexce32.s14",
+      "sha256": "78f70ca1599914470f773e47b76bab494754f4647d0a666c546ecc258b3612ea",
+      "bytes": 130641,
+      "entropy_bits_per_byte": 7.998748,
+      "signature_offsets": {
+        "SN14": -1,
+        "LWC": -1,
+        "ZIP": -1,
+        "GZIP": 12447,
+        "XZ": -1
+      },
+      "bounded_zlib_streams": [],
+      "single_byte_xor_header_matches": [],
+      "status": "UNRESOLVED_WRAPPER",
+      "interpretation": "No supported wrapper established; entropy alone does not prove encryption. No keys, bodies, scenario dates or officer rows inferred."
+    },
+    {
+      "relative_path": "DLC/0010_KO/scedaexce33.s14",
+      "sha256": "91fed3d44114483d03e0e6003721e30d3c8bd8a2392ff81bbc9fe88a2808f61f",
+      "bytes": 130816,
+      "entropy_bits_per_byte": 7.998542,
+      "signature_offsets": {
+        "SN14": -1,
+        "LWC": -1,
+        "ZIP": -1,
+        "GZIP": 3668,
+        "XZ": -1
+      },
+      "bounded_zlib_streams": [],
+      "single_byte_xor_header_matches": [],
+      "status": "UNRESOLVED_WRAPPER",
+      "interpretation": "No supported wrapper established; entropy alone does not prove encryption. No keys, bodies, scenario dates or officer rows inferred."
+    }
+  ],
+  "scope": "Signatures across full file, valid zlib headers in first 1024 bytes with 16 MiB output limit, single-byte XOR header candidates at offsets 0/4/16/32. Not exhaustive cryptanalysis."
+}
