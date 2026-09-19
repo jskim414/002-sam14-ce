@@ -69,15 +69,15 @@
     },
     "package-24966116-r4-final": {
       "path": "reports/package-24966116-r4-final.json",
-      "sha256": "3b5804b71ec87893bc89b557d4b4685179f87d99957e1306269d9477f1d20041"
+      "sha256": "a4e7e062795d4f54abf465b4a1bf7825bf1d4fa8a53151d661c8f747a9d47b4f"
     },
     "preservation-24966116-r4-final": {
       "path": "reports/preservation-24966116-r4-final.json",
-      "sha256": "e5202801fceb1badb6b419acd4a5dcfe418d6b1b71467b811de0fb02540a815f"
+      "sha256": "e6dcb41063de3f249259d328e7856328d3a307ca722c25dad5d56adc1a0f9364"
     },
     "ci-24966116-r4": {
       "path": "reports/ci-24966116-r4.json",
-      "sha256": "31ab81987b14db653a4054667a96eb070a2c8490516bf4c9c058636d0d7310dc"
+      "sha256": "ac2a103af9d0d6dad9960efb43d355e303cc1ad2f8a1aa48155d35f63209c9d8"
     }
   },
   "remaining_decision": "Local completion or authenticated remote review; see docs/deployment-proposal-r4.md",
