@@ -1,6 +1,6 @@
 PRAGMA foreign_keys=ON;
 CREATE TABLE schema_version(version INTEGER PRIMARY KEY, description TEXT NOT NULL);
-INSERT INTO schema_version VALUES(4,'Independent CE candidate schema; one active release');
+INSERT INTO schema_version VALUES(5,'CE catalog provenance, level values and evidence gates');
 CREATE TABLE release_profile(
  id TEXT PRIMARY KEY, build_id TEXT NOT NULL, locale TEXT NOT NULL,
  ruleset TEXT NOT NULL, inventory_sha256 TEXT NOT NULL,
@@ -73,6 +73,26 @@ CREATE TABLE dictionary_detail(
 CREATE TABLE policy_component(
  policy_id INTEGER NOT NULL, component_id INTEGER NOT NULL, slot INTEGER NOT NULL,
  PRIMARY KEY(policy_id,slot)
+);
+CREATE TABLE dictionary_attribute(
+ kind TEXT NOT NULL, dictionary_id INTEGER NOT NULL, attributes_json TEXT NOT NULL,
+ PRIMARY KEY(kind,dictionary_id),
+ FOREIGN KEY(kind,dictionary_id) REFERENCES dictionary(kind,id)
+);
+CREATE TABLE dictionary_text_source(
+ kind TEXT NOT NULL, dictionary_id INTEGER NOT NULL, source_file_id INTEGER NOT NULL REFERENCES source_file(id),
+ message_id INTEGER NOT NULL, record_offset INTEGER NOT NULL,
+ PRIMARY KEY(kind,dictionary_id),
+ FOREIGN KEY(kind,dictionary_id) REFERENCES dictionary(kind,id)
+);
+CREATE TABLE policy_level_effect(
+ effect_id INTEGER NOT NULL, level INTEGER NOT NULL CHECK(level BETWEEN 1 AND 10),
+ raw_value INTEGER NOT NULL, unit TEXT, verification TEXT NOT NULL,
+ source_file_id INTEGER NOT NULL REFERENCES source_file(id), record_offset INTEGER NOT NULL,
+ PRIMARY KEY(effect_id,level)
+);
+CREATE TABLE semantic_evidence(
+ key TEXT PRIMARY KEY, status TEXT NOT NULL, evidence_json TEXT NOT NULL
 );
 CREATE TABLE officer_dictionary(
  scenario_id TEXT NOT NULL, officer_id INTEGER NOT NULL,

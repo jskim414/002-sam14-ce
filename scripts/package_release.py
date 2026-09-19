@@ -19,7 +19,7 @@ def package(output,database=None,mode='release'):
         result=validate(database)
         if not result['structural_pass'] or (mode=='release' and not result['release_ready']):raise ValueError('Release gate not satisfied; use --mode review for a local review package')
     output.mkdir(parents=True)
-    selected=['api/index.py','web/queries.py','web/server.py','vercel.json']
+    selected=['api/index.py','web/queries.py','web/server.py','web/release_gate.py','vercel.json']
     if mode!='maintenance':selected += ['web/static/'+name for name in ('index.html','styles.css','app.js','state.mjs','vendor/qrcode.mjs','vendor/qrcode-LICENSE.txt','vendor/qrcode-provenance.json')]
     for rel in selected:
         src=(ROOT/rel).resolve(strict=True)
@@ -51,7 +51,7 @@ server.serve_forever()
     total=sum(x['bytes'] for x in files.values())
     if total>=450*1024*1024:raise ValueError('Package exceeds conservative 450 MiB budget')
     git=subprocess.run(['git','rev-parse','HEAD'],cwd=ROOT,capture_output=True,text=True)
-    manifest={'mode':mode,'git_sha':git.stdout.strip() or None,'files':files,'total_bytes':total,'database_sha256':sha256(database) if mode!='maintenance' else None,'public_deployment_performed':False}
+    manifest={'format_version':2,'mode':mode,'git_sha':git.stdout.strip() or None,'files':files,'total_bytes':total,'database_sha256':sha256(database) if mode!='maintenance' else None,'public_deployment_performed':False}
     write_json(output/'package-manifest.json',manifest)
     verify(output,release=mode=='release')
     return manifest

@@ -1,9 +1,9 @@
 {
-  "profile_key": "ce-ko-build-24966116-r3",
+  "profile_key": "ce-ko-build-24966116-r4",
   "build_id": "24966116",
   "locale": "ko",
   "ruleset": "CE",
-  "schema_version": 4,
+  "schema_version": 5,
   "default_scenario": "ce-05",
   "release_ready": false,
   "publication": "LOCAL_REVIEW_ONLY",
@@ -69,17 +69,388 @@
       "count": 201,
       "section": 12,
       "name_bytes": 10
+    },
+    "policy_effect": {
+      "offset": 324181,
+      "size": 134,
+      "count": 101,
+      "section": 26,
+      "name_bytes": 22,
+      "description_offset": 22,
+      "description_bytes": 92
+    },
+    "scenic": {
+      "offset": 355398,
+      "size": 80,
+      "count": 101,
+      "section": 38,
+      "name_bytes": 38
+    },
+    "strategy": {
+      "offset": 364584,
+      "size": 37,
+      "count": 80,
+      "section": 41,
+      "name_bytes": 22
+    },
+    "treasure": {
+      "offset": 207471,
+      "size": 22,
+      "count": 202,
+      "section": 13,
+      "name_bytes": 14
+    },
+    "merit": {
+      "offset": 367552,
+      "size": 35,
+      "count": 7,
+      "section": 42,
+      "name_bytes": 14
     }
   },
   "blockers": [
-    "특전 시나리오 32·33의 본문 해석 미완료",
-    "원천 추출과 교차 검증 완료 필드의 게임 화면 검증은 사용자 요청으로 제외",
-    "일부 무장·상태·모드·이용권 분류는 의미 검증 필요",
-    "웹 시각 검증 및 Android/iOS 실기기 검증은 사용자 요청으로 제외"
+    "화면·실기기 검증은 사용자 요청으로 제외",
+    "외부 서비스 접근 방식·공개 범위 미확정 및 원격 운영 검사 미실행"
   ],
   "personality_evidence": {
     "source": "https://medaka.5ch.io/test/read.cgi/gamehis/1585043390/699",
     "encoding": "signed i16 delta, value = raw / 10 + 3",
     "status": "CROSS_CHECKED_NOT_SCREEN_VERIFIED"
+  },
+  "dlc_wrappers": {
+    "scedaexce32.s14": {
+      "steam_app_id": 4598950,
+      "method": "DLC_LCG_XOR_V1"
+    },
+    "scedaexce33.s14": {
+      "steam_app_id": 4598960,
+      "method": "DLC_LCG_XOR_V1"
+    }
+  },
+  "message_source": {
+    "relative_path": "0001_KO/msgdata_exce.bin",
+    "sha256": "6379d4f2349377c678c346e6a3f5f48f44f7fe91c783f71a9a9aee080cc06ded",
+    "snapshot_path": ".artifacts/message-supplement-24966116/msgdata_exce.bin"
+  },
+  "officer_groups": [
+    {
+      "source_ids": [
+        1,
+        1000
+      ],
+      "record_start": 1,
+      "kind": "HISTORICAL",
+      "label": "기본 무장",
+      "biography_offset": 392
+    },
+    {
+      "source_ids": [
+        2001,
+        2088
+      ],
+      "record_start": 1001,
+      "kind": "BONUS",
+      "label": "추가 무장",
+      "biography_offset": 392
+    },
+    {
+      "source_ids": [
+        2089,
+        2100
+      ],
+      "record_start": 1089,
+      "kind": "PLACEHOLDER",
+      "label": "특전 예약 슬롯"
+    },
+    {
+      "source_ids": [
+        4001,
+        4032
+      ],
+      "record_start": 1101,
+      "kind": "NPC",
+      "label": "범용 인물"
+    },
+    {
+      "source_ids": [
+        4033,
+        4100
+      ],
+      "record_start": 1133,
+      "kind": "PLACEHOLDER",
+      "label": "범용 예약 슬롯"
+    },
+    {
+      "source_ids": [
+        4101,
+        4200
+      ],
+      "record_start": 1201,
+      "kind": "NPC",
+      "label": "이민족 인물"
+    },
+    {
+      "source_ids": [
+        5001,
+        5100
+      ],
+      "record_start": 1301,
+      "kind": "NPC",
+      "label": "이벤트 인물·예약 슬롯"
+    }
+  ],
+  "semantic_source": {
+    "relative_path": "SAN14CE_KO.exe",
+    "snapshot_path": ".artifacts/semantic-supplement-24966116/SAN14CE_KO.exe",
+    "sha256": "07a047826cfc316dc9e3db6bfddc72b85e8d7de99743cc73a2d7199a1ad3aa40",
+    "constant_evidence": [
+      {
+        "effect_id": 1,
+        "instruction_va": "0x14041b1fa",
+        "constant_va": "0x141a4a6e8",
+        "constant_file_offset": 27558632,
+        "constant": 1
+      },
+      {
+        "effect_id": 2,
+        "instruction_va": "0x14041b207",
+        "constant_va": "0x141a4a6f4",
+        "constant_file_offset": 27558644,
+        "constant": 1
+      },
+      {
+        "effect_id": 3,
+        "instruction_va": "0x14041b214",
+        "constant_va": "0x141a4a700",
+        "constant_file_offset": 27558656,
+        "constant": 1
+      },
+      {
+        "effect_id": 4,
+        "instruction_va": "0x14041b221",
+        "constant_va": "0x141a4a70c",
+        "constant_file_offset": 27558668,
+        "constant": 1
+      },
+      {
+        "effect_id": 5,
+        "instruction_va": "0x14041b22e",
+        "constant_va": "0x141a4a718",
+        "constant_file_offset": 27558680,
+        "constant": 1
+      },
+      {
+        "effect_id": 6,
+        "instruction_va": "0x14041b23b",
+        "constant_va": "0x141a4a724",
+        "constant_file_offset": 27558692,
+        "constant": 1
+      },
+      {
+        "effect_id": 7,
+        "instruction_va": "0x14041b248",
+        "constant_va": "0x141a4a730",
+        "constant_file_offset": 27558704,
+        "constant": 1
+      },
+      {
+        "effect_id": 8,
+        "instruction_va": "0x14041b255",
+        "constant_va": "0x141a4a73c",
+        "constant_file_offset": 27558716,
+        "constant": 1
+      },
+      {
+        "effect_id": 9,
+        "instruction_va": "0x14041b262",
+        "constant_va": "0x141a4a744",
+        "constant_file_offset": 27558724,
+        "constant": 1
+      },
+      {
+        "effect_id": 10,
+        "instruction_va": "0x140268099",
+        "constant_va": "0x141a49798",
+        "constant_file_offset": 27554712,
+        "constant": 1
+      },
+      {
+        "effect_id": 12,
+        "instruction_va": "0x14041b26f",
+        "constant_va": "0x141a47c24",
+        "constant_file_offset": 27547684,
+        "constant": 1
+      },
+      {
+        "effect_id": 19,
+        "instruction_va": "0x1401698cb",
+        "constant_va": "0x141a489c8",
+        "constant_file_offset": 27551176,
+        "constant": 1
+      },
+      {
+        "effect_id": 20,
+        "instruction_va": "0x1401912de",
+        "constant_va": "0x141a48d54",
+        "constant_file_offset": 27552084,
+        "constant": 1
+      },
+      {
+        "effect_id": 21,
+        "instruction_va": "0x140169860",
+        "constant_va": "0x141a489bc",
+        "constant_file_offset": 27551164,
+        "constant": 1
+      },
+      {
+        "effect_id": 22,
+        "instruction_va": "0x14029ccd8",
+        "constant_va": "0x141a48c64",
+        "constant_file_offset": 27551844,
+        "constant": 1
+      },
+      {
+        "effect_id": 23,
+        "instruction_va": "0x14032163d",
+        "constant_va": "0x141a488e0",
+        "constant_file_offset": 27550944,
+        "constant": 1
+      },
+      {
+        "effect_id": 25,
+        "instruction_va": "0x14026a911",
+        "constant_va": "0x141a48340",
+        "constant_file_offset": 27549504,
+        "constant": 1
+      },
+      {
+        "effect_id": 31,
+        "instruction_va": "0x140268526",
+        "constant_va": "0x141a4a050",
+        "constant_file_offset": 27556944,
+        "constant": 1
+      },
+      {
+        "effect_id": 32,
+        "instruction_va": "0x1402672d1",
+        "constant_va": "0x141a4a250",
+        "constant_file_offset": 27557456,
+        "constant": 1
+      },
+      {
+        "effect_id": 37,
+        "instruction_va": "0x1402650ce",
+        "constant_va": "0x141a4a248",
+        "constant_file_offset": 27557448,
+        "constant": 1
+      },
+      {
+        "effect_id": 38,
+        "instruction_va": "0x1402651bf",
+        "constant_va": "0x141a4a058",
+        "constant_file_offset": 27556952,
+        "constant": 1
+      },
+      {
+        "effect_id": 39,
+        "instruction_va": "0x1402b307b",
+        "constant_va": "0x141a49a04",
+        "constant_file_offset": 27555332,
+        "constant": 1
+      },
+      {
+        "effect_id": 40,
+        "instruction_va": "0x1402b92ef",
+        "constant_va": "0x141a4a1bc",
+        "constant_file_offset": 27557308,
+        "constant": 1
+      },
+      {
+        "effect_id": 41,
+        "instruction_va": "0x1402692b9",
+        "constant_va": "0x141a494b0",
+        "constant_file_offset": 27553968,
+        "constant": 1
+      },
+      {
+        "effect_id": 42,
+        "instruction_va": "0x1402a5075",
+        "constant_va": "0x141a49a04",
+        "constant_file_offset": 27555332,
+        "constant": 1
+      },
+      {
+        "effect_id": 11,
+        "instruction_va": "0x140268b52",
+        "constant_va": "0x141a4a1d4",
+        "constant_file_offset": 27557332,
+        "constant": 1
+      },
+      {
+        "effect_id": 29,
+        "instruction_va": "0x140265f5f",
+        "constant_va": "0x141a4a038",
+        "constant_file_offset": 27556920,
+        "constant": 1
+      },
+      {
+        "effect_id": 30,
+        "instruction_va": "0x14026a29c",
+        "constant_va": "0x141a4a044",
+        "constant_file_offset": 27556932,
+        "constant": 1
+      },
+      {
+        "effect_id": 28,
+        "instruction_va": "0x1402bcb13",
+        "arithmetic": "base * effect * coefficient / 100",
+        "constant_va": "0x141a47f3c",
+        "constant_file_offset": 27548476,
+        "constant": 1,
+        "coefficient_instruction_va": "0x1402bcae0"
+      },
+      {
+        "effect_id": 10,
+        "instruction_va": "0x1402680d6",
+        "constant_va": "0x141a4978c",
+        "constant_file_offset": 27554700,
+        "constant": 100,
+        "role": "default morale cap"
+      }
+    ]
+  },
+  "policy_effect_units": {
+    "1": "BASE_PERCENT",
+    "2": "BASE_PERCENT",
+    "3": "BASE_PERCENT",
+    "4": "BASE_PERCENT",
+    "5": "BASE_PERCENT",
+    "6": "BASE_PERCENT",
+    "7": "BASE_PERCENT",
+    "8": "BASE_PERCENT",
+    "9": "BASE_PERCENT",
+    "10": "BASE_MORALE_POINTS",
+    "11": "BASE_PERCENT",
+    "12": "BASE_PERCENT",
+    "19": "BASE_PERCENT",
+    "20": "BASE_PERCENT",
+    "21": "BASE_PERCENT",
+    "22": "BASE_PERCENT",
+    "23": "BASE_PERCENT",
+    "24": "UNLOCK",
+    "25": "BASE_PERCENT",
+    "28": "BASE_PERCENT",
+    "29": "BASE_PERCENT",
+    "30": "BASE_PERCENT",
+    "31": "BASE_PERCENT",
+    "32": "DURABILITY_POINTS",
+    "37": "ORDERS",
+    "38": "BASE_PERCENT",
+    "39": "BASE_PERCENT",
+    "40": "BASE_PERCENT",
+    "41": "BASE_PERCENT",
+    "42": "BASE_PERCENT",
+    "13": "UNLOCK",
+    "14": "UNLOCK"
   }
 }

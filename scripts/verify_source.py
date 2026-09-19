@@ -10,7 +10,8 @@ import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from common import sha256,write_json
 from probe_ce import probe,officer_records
-from extractors.ce import dictionaries,interpret_record
+from extractors.ce import dictionaries,interpret_record,classify_record
+from source_catalog import catalog
 
 def verify(database,snapshot,profile_path):
     profile=json.loads(profile_path.read_text('utf-8'))
@@ -19,8 +20,9 @@ def verify(database,snapshot,profile_path):
     def source(rel):
         path=snapshot/'game'/rel
         if sha256(path)!=index[rel]['sha256']:raise ValueError('Source hash mismatch: '+rel)
-        return probe(path)[1]
-    dictionary=dictionaries(source('0010_KO/fixdataexce.s14'),profile)
+        app_id=profile.get('dlc_wrappers',{}).get(path.name,{}).get('steam_app_id')
+        return probe(path,steam_app_id=app_id)[1]
+    dictionary,messages=catalog(source('0010_KO/fixdataexce.s14'),profile,inventory)
     c=sqlite3.connect(database.resolve().as_uri()+'?mode=ro',uri=True);c.row_factory=sqlite3.Row
     issues=[];checks=[];row_count=0;edge_count=0
     try:
@@ -29,13 +31,23 @@ def verify(database,snapshot,profile_path):
         if release['profile_sha256']!=sha256(profile_path):issues.append('Profile lineage mismatch')
         expected_dictionary={(kind,r['id'],r['name'],r['record_offset']) for kind,rows in dictionary.items() for r in rows}
         if expected_dictionary!={tuple(r) for r in c.execute('SELECT kind,id,name,record_offset FROM dictionary')}:issues.append('Dictionary source mismatch')
-        expected_details={(kind,r['id'],r['description'],'SOURCE_TEXT') for kind,rows in dictionary.items() for r in rows if r.get('description')}
+        expected_details={(kind,r['id'],r['description'],r.get('description_verification','SOURCE_TEXT')) for kind,rows in dictionary.items() for r in rows if r.get('description')}
         if expected_details!={tuple(r) for r in c.execute('SELECT * FROM dictionary_detail')}:issues.append('Dictionary descriptions mismatch')
         components={(r['id'],id,slot) for r in dictionary['policy'] for slot,id in enumerate(r['components'])}
         if components!={tuple(r) for r in c.execute('SELECT * FROM policy_component')}:issues.append('Policy components mismatch')
+        expected_levels={(r['id'],level,value,r['unit'],r['record_offset']+114+2*(level-1)) for r in dictionary['policy_effect'] for level,value in enumerate(r['level_values'],1)}
+        if expected_levels!={tuple(r) for r in c.execute('SELECT effect_id,level,raw_value,unit,record_offset FROM policy_level_effect')}:issues.append('Policy level vectors/units mismatch')
+        expected_attributes={(kind,r['id'],json.dumps(r['attributes'],ensure_ascii=False,sort_keys=True)) for kind,rows in dictionary.items() for r in rows if 'attributes' in r}
+        if expected_attributes!={tuple(r) for r in c.execute('SELECT * FROM dictionary_attribute')}:issues.append('Catalog attributes mismatch')
+        expected_text={(kind,r['id'],r['message_id'],r['message_offset']) for kind,rows in dictionary.items() for r in rows if 'message_id' in r}
+        if expected_text!={tuple(r) for r in c.execute('SELECT kind,dictionary_id,message_id,record_offset FROM dictionary_text_source')}:issues.append('Catalog text provenance mismatch')
         for s in c.execute("SELECT s.id,f.relative_path FROM scenario s JOIN source_file f ON f.id=s.source_file_id WHERE s.status='PARSED_REVIEW' ORDER BY s.id"):
             data=source(s['relative_path']);block,raw=officer_records(data)
             source_rows=[interpret_record(data,r,dictionary) for r in raw if r['source_id']]
+            for raw_row in raw:
+                if raw_row['source_id']:
+                    classification=c.execute('SELECT kind,kind_verification FROM officer WHERE id=?',(raw_row['source_id'],)).fetchone()
+                    if tuple(classification)!=(classify_record(raw_row,profile,messages),'SOURCE_GROUP_CROSS_CHECKED'):issues.append(f'{s["id"]}:classification:{raw_row["source_id"]}')
             expected={r['id']:r for r in source_rows}
             actual={r['officer_id']:dict(r) for r in c.execute('SELECT * FROM officer_state WHERE scenario_id=?',(s['id'],))}
             local=[]

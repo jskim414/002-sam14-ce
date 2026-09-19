@@ -5,9 +5,9 @@
 ## 허용 파일 패키지
 
 ```powershell
-python scripts/package_release.py --database db/ce-24966116-r3.final.db --mode review --output .artifacts/packages/ce-r3-review
-python .artifacts/packages/ce-r3-review/check_package.py
-python .artifacts/packages/ce-r3-review/run.py --port 8142
+python scripts/package_release.py --database db/ce-24966116-r4.final.db --mode review --output .artifacts/packages/ce-r4-review
+python .artifacts/packages/ce-r4-review/check_package.py
+python .artifacts/packages/ce-r4-review/run.py --port 8142
 ```
 
 고정 허용 목록의 Python 코드, HTML/CSS/JS, 로컬 QR 모듈·라이선스, SQLite DB, 실행·검사 스크립트만 담는다. 원천·Steam manifest·테스트·node_modules·Git·환경값은 포함하지 않는다. `package-manifest.json`은 코드 커밋, 파일별 SHA/크기, DB SHA를 기록한다. 보수적으로 전체 450 MiB 미만을 요구한다.
@@ -18,8 +18,8 @@ python .artifacts/packages/ce-r3-review/run.py --port 8142
 
 ```powershell
 python scripts/package_release.py --mode maintenance --output .artifacts/packages/ce-maintenance
-python scripts/restore_package.py --source .artifacts/packages/ce-r3-review --output .artifacts/packages/ce-r3-restored
-python .artifacts/packages/ce-r3-restored/run.py --port 8143
+python scripts/restore_package.py --source .artifacts/packages/ce-r4-review --output .artifacts/packages/ce-r4-restored
+python .artifacts/packages/ce-r4-restored/run.py --port 8143
 ```
 
 복원은 `.artifacts/packages` 안의 검증된 보존본을 새 경로에 복사하고 해시를 다시 확인한다. 현재 서비스 DB·Legacy·기존 패키지를 교체하지 않는다. 점검 패키지는 데이터 없이 503·Retry-After·점검 메시지를 반환한다. 배포 진입점도 DB 부재, 공개 게이트 미충족, `CE_MAINTENANCE=1`이면 점검 응답을 선택한다.

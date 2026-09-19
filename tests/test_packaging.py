@@ -10,12 +10,13 @@ sys.path.insert(0,str(ROOT/'scripts'))
 from package_release import package
 from check_package import verify
 from restore_package import restore
+from support import make_fixture
 
 class PackagingTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         boundary=ROOT/'.artifacts/packages';boundary.mkdir(parents=True,exist_ok=True)
-        cls.temp=tempfile.TemporaryDirectory(dir=boundary);cls.root=Path(cls.temp.name)
+        cls.temp=tempfile.TemporaryDirectory(dir=boundary);cls.root=Path(cls.temp.name);cls.database=make_fixture(cls.root/'fixture.db')
     @classmethod
     def tearDownClass(cls):cls.temp.cleanup()
     def test_maintenance_restore_and_tamper_detection(self):
@@ -27,7 +28,7 @@ class PackagingTests(unittest.TestCase):
         (source/'api/index.py').write_text('tampered',encoding='utf-8')
         with self.assertRaisesRegex(ValueError,'mismatch'):verify(source)
     def test_unverified_release_and_external_paths_rejected(self):
-        database=ROOT/'db/ce-24966116-r3.final.db'
+        database=self.database
         with self.assertRaisesRegex(ValueError,'Release gate'):package(self.root/'blocked',database)
         self.assertFalse((self.root/'blocked').exists())
         with self.assertRaises(ValueError):package(ROOT/'reports/invalid-package',mode='maintenance')

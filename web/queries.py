@@ -3,12 +3,13 @@ import json
 from contextlib import contextmanager
 from pathlib import Path
 import sqlite3
+from .release_gate import evaluate
 
 class ValidationError(ValueError): pass
 class NotFound(LookupError): pass
 
-STATE_LABELS={'ACTIVE_FORCE':'현역','FREE':'재야','UNAPPEARED':'미등장','DEAD_OR_RETIRED':'사망·은퇴',
-              'DISABLED':'미배치','UNVERIFIED_STATUS':'신분 확인 중'}
+STATE_LABELS={'ACTIVE_FORCE':'현역','FREE':'재야','PRISONER':'포로','UNAPPEARED':'미등장',
+              'UNDISCOVERED':'미발견','DEAD':'사망','DISABLED':'미배치'}
 STAT_KEYS=('leadership','strength','intelligence','politics','charisma')
 
 def positive(value,default,minimum=1,maximum=200):
@@ -34,13 +35,13 @@ class Queries:
         with self.connect() as c:
             p=c.execute('SELECT id,build_id,release_ready,parser_sha256 FROM release_profile').fetchone()
             return {'status':'ok','database':'read-only','schema_version':c.execute('SELECT max(version) FROM schema_version').fetchone()[0],
-                    'release_id':p['id'],'build_id':p['build_id'],'parser_sha256':p['parser_sha256'],'release_ready':bool(p['release_ready'])}
+                    'release_id':p['id'],'build_id':p['build_id'],'parser_sha256':p['parser_sha256'],'release_ready':evaluate(c)['release_ready']}
 
     def coverage(self):
         with self.connect() as c:
             p=dict(c.execute('SELECT * FROM release_profile').fetchone())
             return {'release_id':p['id'],'build_id':p['build_id'],'data_as_of':p['captured_at'],
-                    'release_ready':bool(p['release_ready']),'status':'PARTIAL',
+                    **evaluate(c),'status':'LOCAL_REVIEW',
                     'blockers':json.loads(p['blockers_json']),
                     'datasets':[dict(r) for r in c.execute('SELECT * FROM coverage ORDER BY key')]}
 
@@ -51,7 +52,8 @@ class Queries:
     def meta(self):
         with self.connect() as c:
             result={**self.health(),'default_scenario':'ce-05','states':STATE_LABELS,
-                    'capabilities':{'officers':True,'relationships':True,'personality_verified':False,'publication':False}}
+                    'capabilities':{'officers':True,'relationships':True,'personality_verified':False,'publication':evaluate(c)['release_ready'],
+                                    'scenic':True,'strategy':True,'literature':True,'policy_level_vectors':True}}
             for kind in ('doctrine','policy','trait','formation','tactic'):
                 if kind in ('doctrine','policy'):
                     used=f'SELECT DISTINCT {kind}_id FROM officer_state'
@@ -60,16 +62,24 @@ class Queries:
             return result
 
     def codex(self,kind,id=None):
-        if kind not in ('trait','policy','formation','tactic','doctrine'):raise ValidationError('도감 종류가 올바르지 않습니다.')
+        if kind not in ('trait','policy','formation','tactic','doctrine','scenic','strategy','literature','merit'):raise ValidationError('도감 종류가 올바르지 않습니다.')
         with self.connect() as c:
             args=[kind];where='d.kind=? AND d.id<>0'
             if id is not None:where+=' AND d.id=?';args.append(id)
-            placeholders={'trait':'개성','policy':'정책','formation':'진형','tactic':'전법','doctrine':'주의'}
+            placeholders={'trait':'개성','policy':'정책','formation':'진형','tactic':'전법','doctrine':'주의','scenic':'명승','strategy':'방책','literature':'시문','merit':'공로'}
             rows=[dict(r) for r in c.execute('SELECT d.id,d.name,x.description,x.verification FROM dictionary d LEFT JOIN dictionary_detail x ON x.kind=d.kind AND x.dictionary_id=d.id WHERE '+where+' ORDER BY d.id',args) if r['name'] and r['name'] not in (placeholders[kind],'무효')]
             if id is not None and not rows:raise NotFound('도감 항목을 찾을 수 없습니다.')
+            for row in rows:
+                attributes=c.execute('SELECT attributes_json FROM dictionary_attribute WHERE kind=? AND dictionary_id=?',(kind,row['id'])).fetchone()
+                if attributes:row['attributes']=json.loads(attributes[0])
+                source=c.execute('SELECT f.relative_path,f.sha256,t.message_id,t.record_offset FROM dictionary_text_source t JOIN source_file f ON f.id=t.source_file_id WHERE t.kind=? AND t.dictionary_id=?',(kind,row['id'])).fetchone()
+                if source:row['text_source']=dict(source)
             if kind=='policy':
                 for row in rows:
-                    row['components']=[dict(x) for x in c.execute("SELECT d.id,d.name,t.description FROM policy_component p JOIN dictionary d ON d.kind='policy' AND d.id=p.component_id LEFT JOIN dictionary_detail t ON t.kind=d.kind AND t.dictionary_id=d.id WHERE p.policy_id=? AND p.component_id<>p.policy_id ORDER BY p.slot",(row['id'],))]
+                    row['components']=[dict(x) for x in c.execute("SELECT d.id,d.name,t.description FROM policy_component p JOIN dictionary d ON d.kind='policy_effect' AND d.id=p.component_id LEFT JOIN dictionary_detail t ON t.kind=d.kind AND t.dictionary_id=d.id WHERE p.policy_id=? ORDER BY p.slot",(row['id'],))]
+                    row['level_effects']=[{'id':x['id'],'name':x['name'],'description':x['description'],'attributes':json.loads(c.execute("SELECT attributes_json FROM dictionary_attribute WHERE kind='policy_effect' AND dictionary_id=?",(x['id'],)).fetchone()[0]) if c.execute("SELECT 1 FROM dictionary_attribute WHERE kind='policy_effect' AND dictionary_id=?",(x['id'],)).fetchone() else {},'levels':[dict(v) for v in c.execute('SELECT level,raw_value,unit,verification,record_offset FROM policy_level_effect WHERE effect_id=? ORDER BY level',(x['id'],))]} for x in c.execute("SELECT d.id,d.name,t.description FROM policy_component p JOIN dictionary d ON d.kind='policy_effect' AND d.id=p.component_id LEFT JOIN dictionary_detail t ON t.kind=d.kind AND t.dictionary_id=d.id WHERE p.policy_id=? ORDER BY p.slot",(row['id'],))]
+                    row['level_scope']='동일 효과를 가진 정책 레벨 합계(최대 10)의 기본 효과표입니다. 개인 정책 레벨이나 현재 세력의 실제 효과와 다릅니다. 단위는 실행 코드와 기본 계수로 대조했으며, 설정 변경·추가 보정·상한·반올림은 별도입니다.'
+                    row['rule_source']='https://www.gamecity.ne.jp/manual/sangokushi14-pk/ce/jp/4100.html'
             return {'kind':kind,'items':rows,'coverage_status':'SOURCE_TEXT_PARTIAL_EFFECT_FORMULAS'}
 
     def compare(self,ids,scenario=None):

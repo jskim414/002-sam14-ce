@@ -9,22 +9,28 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from extractors.lwc import decode, FormatError
+from extractors.dlc import unwrap
+from extractors.ce import scenario_header
 from common import ROOT, output_path, sha256, write_json
 
 def string_at(data: bytes, offset: int, size: int) -> str:
     return data[offset:offset+size].decode('utf-16le', errors='strict').split('\0')[0]
 
-def probe(path: Path) -> tuple[dict, bytes | None]:
+def probe(path: Path, *, steam_app_id: int | None = None) -> tuple[dict, bytes | None]:
     raw = path.read_bytes()
     report = {'file_name': path.name, 'size_bytes': len(raw), 'sha256': sha256(path)}
-    if raw[4:20] != b'SN14SCEXVER0001\0':
-        report.update(status='FAILED', reason='UNRECOGNIZED_OUTER_HEADER')
+    try:
+        raw,wrapper=unwrap(raw,path.name,steam_app_id)
+        report.update(wrapper=wrapper,unwrapped_sha256=hashlib.sha256(raw).hexdigest())
+    except FormatError as error:
+        report.update(status='FAILED', reason=str(error))
         return report, None
     offset = raw.find(b'LWC\x1a')
     if offset < 20:
         report.update(status='FAILED', reason='MISSING_LWC_STREAM')
         return report, None
     report.update(header_version=struct.unpack_from('<I',raw)[0], lwc_offset=offset)
+    if path.name.startswith('scedaexce'):report['scenario']=scenario_header(raw,path.name)
     # Only short title metadata is exported; narrative/help text stays private.
     header_text = raw[20:offset-offset%2].decode('utf-16le', errors='replace')
     parts = [s for s in header_text.split('\0') if s]
@@ -73,18 +79,21 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--snapshot',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--profile',type=Path,default=ROOT/'profiles/ce-ko-24966116.json')
     a=p.parse_args(); out=output_path(a.output)
     if not out.is_relative_to((ROOT/'.artifacts').resolve()):
         raise ValueError('Probe results must remain private')
     out.mkdir(parents=True)
     inventory=json.loads((a.snapshot/'inventory.json').read_text('utf-8'))
+    profile=json.loads(a.profile.read_text('utf-8'))
     reports=[]
     for row in inventory['files']:
         rel=Path(row['relative_path'])
         if '0010_KO' not in rel.parts or 'exce' not in rel.name or rel.suffix!='.s14':continue
         path=a.snapshot/'game'/rel
         if sha256(path)!=row['sha256']:raise FormatError('Source snapshot hash mismatch')
-        report,data=probe(path);report['relative_path']=rel.as_posix()
+        app_id=profile.get('dlc_wrappers',{}).get(path.name,{}).get('steam_app_id')
+        report,data=probe(path,steam_app_id=app_id);report['relative_path']=rel.as_posix()
         if data is not None:
             name=rel.as_posix().replace('/','_')
             (out/(name+'.decoded.bin')).write_bytes(data)

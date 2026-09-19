@@ -6,9 +6,12 @@ from extractors.ce import interpret_record
 from extractors.lwc import FormatError
 
 ROOT=Path(__file__).resolve().parents[1]
+from support import REAL_DATABASE
+
+@unittest.skipUnless(REAL_DATABASE,'Real integration requires CE_TEST_DATABASE')
 class ExtendedCandidateTests(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):cls.q=Queries(ROOT/'db/ce-24966116-r3.final.db')
+    def setUpClass(cls):cls.q=Queries(REAL_DATABASE)
     def test_personality_raw_encoding_and_known_samples(self):
         cao=self.q.officer(521,'ce-05');values={x['key']:x['value'] for x in cao['personality']}
         self.assertEqual(values,dict(integrity=2,diplomacy=3,han_attitude=3,ambition=5,aggression=4))
@@ -42,5 +45,25 @@ class ExtendedCandidateTests(unittest.TestCase):
         row={'record_offset':0,'source_id':1,'name':'fixture','courtesy_name':'','record_sha256':'0'*64}
         dictionary={k:[{'name':'invalid'}] for k in ['formation','settlement','doctrine','policy','trait','tactic']}
         with self.assertRaisesRegex(FormatError,'personality'):interpret_record(bytes(record),row,dictionary)
+    def test_dlc_dates_rows_and_state_correction(self):
+        scenarios={r['id']:r for r in self.q.scenarios()}
+        for sid,name,year,month in [('ce-32','조조의 오산',196,6),('ce-33','패기웅심',202,8)]:
+            row=scenarios[sid]
+            self.assertEqual((row['name'],row['start_year'],row['start_month'],row['expected_rows']),(name,year,month,1400))
+            self.assertEqual(self.q.officers({'scenario':sid})['total'],1000)
+        with self.q.connect() as c:
+            self.assertFalse(c.execute("SELECT 1 FROM officer_state WHERE (raw_state=5 AND state<>'FREE') OR (raw_state=8 AND state<>'UNDISCOVERED')").fetchone())
+    def test_new_catalogs_and_effect_reference(self):
+        scenic=self.q.codex('scenic')['items'];strategy=self.q.codex('strategy')['items'];literature=self.q.codex('literature')['items']
+        self.assertEqual(len(scenic),100);self.assertEqual(len(strategy),79);self.assertEqual(len(literature),20)
+        self.assertEqual(self.q.codex('merit',1)['items'][0]['attributes']['credit_threshold'],-1000)
+        self.assertIn('갈석산',[r['name'] for r in scenic])
+        self.assertIn('통솔+1',self.q.codex('strategy',2)['items'][0]['description'])
+        row=self.q.codex('policy',47)['items'][0]
+        self.assertEqual(row['components'][0]['name'],'사기상한상승')
+        self.assertEqual(row['level_effects'][0]['levels'][-1]['raw_value'],30)
+        self.assertEqual(row['level_effects'][0]['levels'][0]['unit'],'BASE_MORALE_POINTS')
+        self.assertEqual(row['level_effects'][1]['levels'][0]['unit'],'BASE_PERCENT')
+        self.assertEqual(row['level_effects'][3]['attributes']['unlocks'][0],{'level':2,'name':'석벽'})
 
 if __name__=='__main__':unittest.main()

@@ -12,8 +12,9 @@ import tempfile
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from common import ROOT, output_path, sha256, write_json
 from probe_ce import probe, officer_records
-from extractors.ce import dictionaries, scenario_header, interpret_record
+from extractors.ce import dictionaries, scenario_header, interpret_record, classify_record
 from extractors.lwc import FormatError
+from source_catalog import catalog
 
 def content_digest(conn: sqlite3.Connection) -> str:
     digest=hashlib.sha256()
@@ -35,7 +36,7 @@ def build(snapshot: Path, profile_path: Path, output: Path, report_path: Path) -
         if sha256(snapshot/'game'/rel)!=row['sha256']:raise ValueError('Snapshot hash mismatch: '+rel)
     _,shared=probe(snapshot/'game/0010_KO/fixdataexce.s14')
     if shared is None:raise FormatError('Shared CE data cannot be decoded')
-    dictionary=dictionaries(shared,profile)
+    dictionary,messages=catalog(shared,profile,inv)
     output.parent.mkdir(parents=True,exist_ok=True)
     temp_handle=tempfile.NamedTemporaryFile(prefix='ce-build-',suffix='.db',dir=output.parent,delete=False)
     temp=Path(temp_handle.name);temp_handle.close()
@@ -43,7 +44,7 @@ def build(snapshot: Path, profile_path: Path, output: Path, report_path: Path) -
     parsed=[];unparsed=[]
     try:
         conn.executescript((ROOT/'db/schema.sql').read_text('utf-8'))
-        parser_digest=hashlib.sha256(b''.join(p.read_bytes() for p in sorted((ROOT/'extractors').glob('*.py')))+Path(__file__).read_bytes()+(ROOT/'scripts/probe_ce.py').read_bytes()+(ROOT/'db/schema.sql').read_bytes()).hexdigest()
+        parser_digest=hashlib.sha256(b''.join(p.read_bytes() for p in sorted((ROOT/'extractors').glob('*.py')))+Path(__file__).read_bytes()+(ROOT/'scripts/probe_ce.py').read_bytes()+(ROOT/'scripts/source_catalog.py').read_bytes()+(ROOT/'db/schema.sql').read_bytes()).hexdigest()
         git=subprocess.run(['git','rev-parse','HEAD'],cwd=ROOT,capture_output=True,text=True)
         with conn:
             conn.execute('INSERT INTO release_profile VALUES(?,?,?,?,?,?,?,?,?,?,?)',
@@ -57,21 +58,40 @@ def build(snapshot: Path, profile_path: Path, output: Path, report_path: Path) -
                              (rel,row['sha256'],row['size_bytes'],status,'CE Korean P0 candidate' if rel in inputs else 'Outside this candidate parser scope'))
             file_ids=dict(conn.execute('SELECT relative_path,id FROM source_file'))
             conn.execute("UPDATE source_file SET processing_status='EXTRACTED' WHERE id=?",(file_ids['0010_KO/fixdataexce.s14'],))
+            message_file_id=file_ids[profile['message_source']['relative_path']]
+            conn.execute("UPDATE source_file SET processing_status='EXTRACTED',notes='Hash-verified message supplement; selected catalog text only' WHERE id=?",(message_file_id,))
+            conn.execute("UPDATE source_file SET processing_status='EXTRACTED',notes='Read-only static semantic evidence; executable never packaged' WHERE id=?",(file_ids[profile['semantic_source']['relative_path']],))
+            for key,indices in [('officer_state',range(249,259)),('scenario_mode',range(4,9))]:
+                conn.execute('INSERT INTO semantic_evidence VALUES(?,?,?)',(key,'SOURCE_MESSAGE_CROSS_CHECKED',json.dumps({'source_file_id':message_file_id,'entries':[messages[i] for i in indices]},ensure_ascii=False)))
+            conn.execute('INSERT INTO semantic_evidence VALUES(?,?,?)',('officer_classification','SOURCE_GROUP_CROSS_CHECKED',json.dumps({'groups':profile['officer_groups'],'basis':'Source ID and record index plus biography message presence; not historical accuracy, playability or ownership'},ensure_ascii=False)))
+            conn.execute('INSERT INTO semantic_evidence VALUES(?,?,?)',('policy_effect_application','STATIC_BASELINE_CROSS_CHECKED',json.dumps({'source_file_id':file_ids[profile['semantic_source']['relative_path']],'units':profile['policy_effect_units'],'scope':'Baseline policy reference only; no live saved-game calculation'},ensure_ascii=False)))
+            for key,status,note in [('screen_validation','EXCLUDED_BY_USER','게임·브라우저·실기기 화면 검증 제외'),('remote_operations','UNRESOLVED','Remote deployment, rollback and observations not performed')]:
+                conn.execute('INSERT INTO semantic_evidence VALUES(?,?,?)',(key,status,json.dumps({'note':note},ensure_ascii=False)))
             for app_id in inv['installed_dlc_ids']:
                 conn.execute('INSERT INTO content_pack(code,steam_app_id,installed,ownership_status,evidence) VALUES(?,?,1,?,?)',
                              (f'STEAM_DLC_{app_id}',app_id,'INSTALL_MANIFEST_ONLY','InstalledDepots; not independent license verification'))
             for kind,rows in dictionary.items():
                 for row in rows:
-                    conn.execute('INSERT INTO dictionary VALUES(?,?,?,?,?)',(kind,row['id'],row['name'],file_ids['0010_KO/fixdataexce.s14'],row['record_offset']))
+                    source_id=message_file_id if row.get('source')=='message' else file_ids['0010_KO/fixdataexce.s14']
+                    conn.execute('INSERT INTO dictionary VALUES(?,?,?,?,?)',(kind,row['id'],row['name'],source_id,row['record_offset']))
                     if row.get('description'):
-                        conn.execute('INSERT INTO dictionary_detail VALUES(?,?,?,?)',(kind,row['id'],row['description'],'SOURCE_TEXT'))
+                        conn.execute('INSERT INTO dictionary_detail VALUES(?,?,?,?)',(kind,row['id'],row['description'],row.get('description_verification','SOURCE_TEXT')))
+                    if 'message_id' in row:
+                        conn.execute('INSERT INTO dictionary_text_source VALUES(?,?,?,?,?)',(kind,row['id'],message_file_id,row['message_id'],row['message_offset']))
+                    if 'attributes' in row:
+                        conn.execute('INSERT INTO dictionary_attribute VALUES(?,?,?)',(kind,row['id'],json.dumps(row['attributes'],ensure_ascii=False,sort_keys=True)))
+                    if 'level_values' in row:
+                        for level,value in enumerate(row['level_values'],1):
+                            conn.execute('INSERT INTO policy_level_effect VALUES(?,?,?,?,?,?,?)',(row['id'],level,value,row['unit'],'STATIC_BASELINE_CROSS_CHECKED' if row['unit'] else 'UNUSED_SLOT',source_id,row['record_offset']+114+2*(level-1)))
                     if kind=='policy':
                         for slot,id in enumerate(row['components']):
-                            if id>=len(dictionary['policy']):raise FormatError('Invalid policy component')
+                            if id>=len(dictionary['policy_effect']):raise FormatError('Invalid policy effect reference')
                             conn.execute('INSERT INTO policy_component VALUES(?,?,?)',(row['id'],id,slot))
             for rel in sorted(inputs):
                 if not Path(rel).name.startswith('sceda'):continue
-                path=snapshot/'game'/rel;meta,data=probe(path)
+                path=snapshot/'game'/rel
+                app_id=profile.get('dlc_wrappers',{}).get(path.name,{}).get('steam_app_id')
+                meta,data=probe(path,steam_app_id=app_id)
                 if data is None:
                     code=int(''.join(x for x in path.stem if x.isdigit()))
                     # Title candidates confirmed in the CE message catalog; body unresolved.
@@ -80,21 +100,20 @@ def build(snapshot: Path, profile_path: Path, output: Path, report_path: Path) -
                                  (f'ce-{code:02}',code,name,None,None,'UNCLASSIFIED','PENDING',file_ids[rel],'PENDING',None,None,'INSTALLED_BODY_UNREAD'))
                     conn.execute("UPDATE source_file SET processing_status='FAILED',notes=? WHERE id=?",(meta['reason'],file_ids[rel]))
                     unparsed.append({'path':rel,'reason':meta['reason']});continue
-                header=scenario_header(path.read_bytes(),path.name)
+                header=meta['scenario']
                 if meta['header_version']!=profile['record_layout']['header_version']:raise FormatError('Unknown header version')
                 block,raw_rows=officer_records(data)
+                classifications={r['source_id']:classify_record(r,profile,messages) for r in raw_rows if r['source_id']}
                 officers=[interpret_record(data,r,dictionary) for r in raw_rows if r['source_id']]
                 conn.execute('INSERT INTO scenario VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
                              (header['id'],header['source_code'],header['name'],header['start_year'],header['start_month'],header['mode'],header['mode_verification'],file_ids[rel],'PARSED_REVIEW',len(officers),block['count'],'INSTALLED_REVIEW_REQUIRED'))
                 conn.execute("UPDATE source_file SET processing_status='EXTRACTED',notes='Records decoded; semantics under review' WHERE id=?",(file_ids[rel],))
                 sid=header['id'];rulers={r['force_id']:r['name'] for r in officers if r['raw_state']==1 and r['force_id']}
                 for r in officers:
-                    # Classification is provisional, separate from installed entitlement.
-                    kind='HISTORICAL' if 1<=r['id']<=1000 else 'BONUS' if 2000<r['id']<4000 else 'NPC'
-                    if any(token in r['name'] for token in ('특전','범용')):kind='PLACEHOLDER'
+                    kind=classifications[r['id']]
                     existing=conn.execute('SELECT name,courtesy_name FROM officer WHERE id=?',(r['id'],)).fetchone()
                     if existing and existing!=(r['name'],r['courtesy_name']):raise FormatError(f'Identity differs across scenarios: {r["id"]}')
-                    conn.execute('INSERT OR IGNORE INTO officer VALUES(?,?,?,?,?)',(r['id'],r['name'],r['courtesy_name'],kind,'REVIEW_REQUIRED'))
+                    conn.execute('INSERT OR IGNORE INTO officer VALUES(?,?,?,?,?)',(r['id'],r['name'],r['courtesy_name'],kind,'SOURCE_GROUP_CROSS_CHECKED'))
                     columns=['name','state','raw_state','force_id','settlement_id','settlement_name','appearance_year','birth_year','death_year','leadership','strength','intelligence','politics','charisma','affinity','doctrine_id','doctrine','policy_id','policy','policy_level','record_offset','record_sha256']
                     names=['scenario_id','officer_id']+columns+['force_name','verification']
                     conn.execute('INSERT INTO officer_state('+','.join(names)+') VALUES('+','.join('?' for _ in names)+')',
@@ -116,7 +135,10 @@ def build(snapshot: Path, profile_path: Path, output: Path, report_path: Path) -
                         for slot,target in enumerate(sorted(siblings)):
                             conn.execute('INSERT INTO relationship_edge VALUES(?,?,?,?,?,?)',(scope,r['id'],target,'SWORN_SIBLING',slot,r['record_offset']))
                 parsed.append({**header,'named_records':len(officers),'record_slots':block['count']})
-            metrics=[('scenario_files',len(inputs)-1,len(parsed),'PARTIAL','Two DLC wrappers currently unreadable'),
+            metrics=[('scenario_files',len(inputs)-1,len(parsed),'PASS' if not unparsed else 'PARTIAL','All measured Korean scenario bodies decoded' if not unparsed else 'Some source containers remain unreadable'),
+                     ('officer_state_labels',10,10,'PASS','Independent Korean message enum agrees with raw code order'),
+                     ('scenario_mode_labels',5,5,'PASS','Independent Korean message enum'),
+                     ('policy_level_vectors',1010,1010,'PASS','Source vectors and baseline arithmetic units; unlock-only vectors not presented as numeric effects'),
                      ('personality_fields',5,5,'PARTIAL','Signed raw deltas cross-checked with original format research; screen verification excluded'),
                      ('game_screen_checks',None,0,'PENDING','Excluded by user request; not a completed check'),
                      ('mobile_device_checks',2,0,'PENDING','Excluded by user request; not a completed check'),
@@ -128,7 +150,7 @@ def build(snapshot: Path, profile_path: Path, output: Path, report_path: Path) -
         digest=content_digest(conn)
         counts={name:conn.execute('SELECT count(*) FROM '+name).fetchone()[0] for name in ['scenario','officer','officer_state','relationship_edge','dictionary']}
         conn.close(); temp.rename(output)
-        report={'profile_key':profile['profile_key'],'build_id':profile['build_id'],'schema_version':4,
+        report={'profile_key':profile['profile_key'],'build_id':profile['build_id'],'schema_version':profile['schema_version'],
                 'candidate_sha256':sha256(output),'content_sha256':digest,'inventory_sha256':sha256(snapshot/'inventory.json'),
                 'parser_sha256':parser_digest,'counts':counts,'parsed_scenarios':parsed,'unparsed_files':unparsed,
                 'integrity':integrity,'foreign_key_violations':len(foreign),'release_ready':False,'blockers':profile['blockers']}

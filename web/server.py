@@ -42,10 +42,10 @@ def make_handler(service):
                     if path in calls:
                         if f:raise ValidationError('이 API는 검색 조건을 받지 않습니다.')
                         return self.send(200,calls[path]())
-                    dictionary_match=re.fullmatch(r'/api/v1/(traits|policies|formations|tactics|doctrines)(?:/(\d+))?',path)
+                    dictionary_match=re.fullmatch(r'/api/v1/(traits|policies|formations|tactics|doctrines|scenics|strategies|literatures|merits)(?:/(\d+))?',path)
                     if dictionary_match:
                         if f:raise ValidationError('이 도감 API는 검색 조건을 받지 않습니다.')
-                        kind={'traits':'trait','policies':'policy','formations':'formation','tactics':'tactic','doctrines':'doctrine'}[dictionary_match[1]]
+                        kind={'traits':'trait','policies':'policy','formations':'formation','tactics':'tactic','doctrines':'doctrine','scenics':'scenic','strategies':'strategy','literatures':'literature','merits':'merit'}[dictionary_match[1]]
                         return self.send(200,service.codex(kind,int(dictionary_match[2]) if dictionary_match[2] else None))
                     raise NotFound('API를 찾을 수 없습니다.')
                 if f and path!='/':raise NotFound('페이지를 찾을 수 없습니다.')

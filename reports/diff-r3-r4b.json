@@ -1,0 +1,14 @@
+{
+  "baseline_sha256": "9d3bc856e059d01e9047e0fc86da653df202cc48cf768aab678a0be7097be3a5",
+  "candidate_sha256": "bc672cc8746b9213525ed3e235650fb478c88ab8b5dc320bf2ff75f32195ccd1",
+  "pass": true,
+  "existing_records_compared": 70000,
+  "changed_fields": {
+    "state": 23775
+  },
+  "unexpected_changes": [],
+  "newly_decoded": [
+    "ce-32",
+    "ce-33"
+  ]
+}

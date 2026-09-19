@@ -10,8 +10,8 @@ const media={matches:false,addEventListener(){}};
 const $=s=>dom.window.document.querySelector(s);
 async function until(fn){for(let i=0;i<100;i++){if(fn())return;await delay(20);}assert.fail('Timed out: '+fn);}
 before(async()=>{
-  child=spawn('python',['-c',"from pathlib import Path;from web.server import create_server;s=create_server('127.0.0.1',0,Path('db/ce-24966116-r3.final.db'));print(s.server_port,flush=True);s.serve_forever()"],{stdio:['ignore','pipe','ignore'],windowsHide:true});
-  const port=await new Promise((resolve,reject)=>{child.stdout.once('data',x=>resolve(Number(x.toString().trim())));child.once('error',reject);});
+  child=spawn(process.env.PYTHON||'python',['tests/serve_fixture.py'],{stdio:['ignore','pipe','ignore'],windowsHide:true});
+  const port=await new Promise((resolve,reject)=>{child.stdout.once('data',x=>resolve(Number(x.toString().trim())));child.once('error',reject);child.once('exit',code=>reject(new Error(`Fixture server exited: ${code}`)));});
   base=`http://127.0.0.1:${port}`;
   dom=new JSDOM(await readFile('web/static/index.html','utf8'),{url:base+'/?scenario=ce-05&q=%EC%A1%B0%EC%A1%B0'});
   for(const k of ['window','document','location','history','localStorage','FormData'])Object.defineProperty(globalThis,k,{value:dom.window[k],configurable:true});
@@ -48,7 +48,7 @@ test('comparison, multi-trait serialization and desktop panel logic',async()=>{
   $('#filter-form').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));assert.equal(new URLSearchParams(location.search).get('trait'),'14,196');
   media.matches=true;history.replaceState({},'',base+'/?scenario=ce-05&q=%EC%A1%B0%EC%A1%B0&officer=521');window.dispatchEvent(new dom.window.PopStateEvent('popstate'));
   await until(()=>$('#detail-content h2')?.textContent==='조조');assert.equal($('#detail').dataset.mode,'panel');
-  history.replaceState({},'',base+'/?scenario=ce-05');window.dispatchEvent(new dom.window.PopStateEvent('popstate'));await until(()=>$('#results table')&&$('#count').textContent==='1,000명');
+  history.replaceState({},'',base+'/?scenario=ce-05');window.dispatchEvent(new dom.window.PopStateEvent('popstate'));await until(()=>$('#results table')&&$('#count').textContent===(process.env.CE_TEST_DATABASE?'1,000명':'3명'));
 });
 test('QR stays local and stale responses are visibly identified',async()=>{
   $('#share-page').click();$('#share-origin').value='https://example.com';$('#make-qr').click();
@@ -58,4 +58,17 @@ test('QR stays local and stale responses are visibly identified',async()=>{
   history.replaceState({},'',base+'/?scenario=ce-05&q=%EC%A1%B0%EC%A1%B0');window.dispatchEvent(new dom.window.PopStateEvent('popstate'));
   await until(()=>!$('#cache-status').hidden);assert.match($('#cache-status').textContent,/저장한 결과/);
   networkDown=false;Date.now=realNow;
+});
+test('DLC selection and new codices remain usable without officer filter buttons',async()=>{
+  history.replaceState({},'',base+'/?scenario=ce-32');window.dispatchEvent(new dom.window.PopStateEvent('popstate'));
+  await until(()=>$('#scenario').value==='ce-32'&&$('#results [data-officer]'));
+  $('[data-tab="codex"]').click();await until(()=>!$('#codex-controls').hidden);
+  for(const kind of ['scenic','strategy','literature','merit']){
+    $(`[data-codex="${kind}"]`).click();
+    await until(()=>$('#results .codex-card')&&!$('#results [data-codex-filter]'));
+    assert.ok($('#results .codex-card h3').textContent);
+  }
+  $('[data-codex="policy"]').click();await until(()=>$('#results .level-effects'));
+  assert.match($('#results .level-effects').textContent,/개인 정책 레벨/);
+  assert.match($('#results .level-effects').textContent,/단위/);
 });

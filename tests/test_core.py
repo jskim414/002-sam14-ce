@@ -16,6 +16,7 @@ from diff_install_inventory import compare
 from web.queries import Queries,ValidationError
 from web.server import create_server
 from validate_db import validate
+from support import REAL_DATABASE
 
 def stream(size,payload):return b'LWC\x1a'+struct.pack('<II',size,len(payload))+bytes(range(256))+payload
 
@@ -57,7 +58,7 @@ class RelationshipContractTests(unittest.TestCase):
             for id,name in [(1,'동명'),(2,'동명'),(3,'다른무장')]:
                 c.execute("INSERT INTO officer VALUES(?,?,'','HISTORICAL','TEST')",(id,name))
                 for sid in ['ce-01','ce-05']:
-                    c.execute("INSERT INTO officer_state(scenario_id,officer_id,name,state,raw_state,leadership,strength,intelligence,politics,charisma,record_offset,record_sha256,verification) VALUES(?,?,?,'FREE',8,50,50,50,50,50,0,?,'TEST')",(sid,id,name,'0'*64))
+                    c.execute("INSERT INTO officer_state(scenario_id,officer_id,name,state,raw_state,leadership,strength,intelligence,politics,charisma,record_offset,record_sha256,verification) VALUES(?,?,?,'FREE',5,50,50,50,50,50,0,?,'TEST')",(sid,id,name,'0'*64))
                     c.execute("INSERT INTO officer_personality(scenario_id,officer_id,verification) VALUES(?,?,'UNKNOWN')",(sid,id))
             c.execute("INSERT INTO relationship_scope VALUES(1,'ce-01','SCENARIO_COMPLETE_RECORDS','TEST')")
             c.execute("INSERT INTO relationship_scope VALUES(2,'ce-05','SCENARIO_COMPLETE_RECORDS','TEST')")
@@ -87,11 +88,11 @@ class RelationshipContractTests(unittest.TestCase):
         self.assertEqual(self.q.officers({'scenario':'ce-01','q':'동명'})['total'],2)
         self.assertEqual(self.q.officers({'scenario':'ce-01','ids':''})['total'],0)
 
-@unittest.skipUnless((ROOT/'db/ce-24966116-r3.final.db').exists(),'Real snapshot candidate not built')
+@unittest.skipUnless(REAL_DATABASE,'Real integration requires CE_TEST_DATABASE; synthetic tests run separately')
 class CandidateIntegrationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.db=ROOT/'db/ce-24966116-r3.final.db';cls.q=Queries(cls.db)
+        cls.db=REAL_DATABASE;cls.q=Queries(cls.db)
         cls.server=create_server('127.0.0.1',0,cls.db);cls.thread=threading.Thread(target=cls.server.serve_forever,daemon=True);cls.thread.start()
         cls.url=f'http://127.0.0.1:{cls.server.server_address[1]}'
     @classmethod
@@ -105,7 +106,7 @@ class CandidateIntegrationTests(unittest.TestCase):
         rows=self.q.officers({'scenario':'ce-05','trait':'196','page_size':'200'})
         ids=[x['officer_id'] for x in rows['items']];self.assertEqual(len(ids),len(set(ids)));self.assertGreater(len(ids),0)
     def test_scenario_mode_and_pending_rejected(self):
-        for sid in ['ce-32','ce-100','ce-71']:
+        for sid in ['ce-100','ce-71']:
             with self.assertRaises(ValidationError):self.q.officers({'scenario':sid})
     def test_api_errors_and_routes(self):
         for path in ['/api/v1/health','/api/v1/meta','/api/v1/coverage','/api/v1/policies','/api/v1/policies/47','/api/v1/tactics','/api/v1/compare?ids=147,521','/api/v1/officers/147?scenario=ce-05','/']:

@@ -6,6 +6,7 @@ from __future__ import annotations
 import re
 import struct
 from .lwc import FormatError
+from .messages import STATE_CODES
 
 def u16(data: bytes, offset: int) -> int:
     return struct.unpack_from('<H',data,offset)[0]
@@ -27,12 +28,41 @@ def dictionaries(data: bytes, profile: dict) -> dict:
             if 'description_offset' in layout:
                 row['description']=fixed_text(data,start+i*size+layout['description_offset'],layout['description_bytes'])
             if kind=='policy':row['components']=[x for x in data[start+i*size+136:start+i*size+144] if x]
+            if kind=='policy_effect':
+                row['level_values']=list(struct.unpack_from('<10h',data,start+i*size+114))
+                row['unit']=profile['policy_effect_units'].get(str(i))
+                row['attributes']={'unlocks':[{'level':int(level),'name':name} for level,name in re.findall(r'(\d+):([^，,)]+)',row.get('description',''))],
+                                   'numeric_applicability':'NOT_APPLICABLE' if i in (13,14,24) else 'STATIC_BASELINE' if row['unit'] else 'UNUSED_SLOT',
+                                   'direction':'DECREASE' if i in (11,22,38) else 'INCREASE',
+                                   'condition':'기본 계수 기준. 설정 변경·추가 보정·상한·반올림 전의 정책 효과표이며 현재 세력 효과 계산이 아님'}
+            if kind=='strategy':
+                row['attributes']={'adjacent_ids':[x for x in data[start+i*size+31:start+(i+1)*size] if x],
+                                   'scope':'Static name, description and adjacent panel references'}
+            if kind=='merit':
+                threshold=struct.unpack_from('<h',data,start+i*size+28)[0]
+                row['description']=f'공로 기준 {threshold:,}. 승급·강등의 추가 조건과 보정은 이 표에 포함하지 않습니다.'
+                row['description_verification']='SOURCE_THRESHOLD_COMPOSITION'
+                row['attributes']={'credit_threshold':threshold,'scope':'Rank names and signed credit thresholds only'}
             rows.append(row)
         result[kind]=rows
     # Global settlement references continue after the city/tribal-city slots.
     for gate in result['gate'][1:]:
         result['settlement'].append({**gate,'id':len(result['settlement'])})
     return result
+
+
+def classify_record(row: dict, profile: dict, messages: list[dict]) -> str:
+    """Source slot groups, never a statement of historical truth or ownership."""
+    for group in profile['officer_groups']:
+        first,last=group['source_ids']
+        if first<=row['source_id']<=last:
+            expected=group['record_start']+row['source_id']-first
+            if row['record_index']!=expected:raise FormatError('Officer source group/index mismatch')
+            if group.get('biography_offset') is not None:
+                text=messages[group['biography_offset']+expected]['text']
+                if not text or text=='무효':raise FormatError('Missing named officer biography evidence')
+            return group['kind']
+    raise FormatError(f'Unclassified officer source ID {row["source_id"]}')
 
 def scenario_header(raw: bytes, filename: str) -> dict:
     if raw[4:20]!=b'SN14SCEXVER0001\0' or len(raw)<754:
@@ -45,7 +75,7 @@ def scenario_header(raw: bytes, filename: str) -> dict:
     if not 1<=month<=12:raise FormatError('Scenario month outside calendar')
     return {'id':f'ce-{code:02}', 'source_code':code, 'name':fixed_text(raw,422,34),
             'start_year':u16(raw,456),'start_month':month,'mode':mode,
-            'mode_verification':'STRUCTURAL_REVIEW_REQUIRED'}
+            'mode_verification':'SOURCE_MESSAGE_CROSS_CHECKED'}
 
 def interpret_record(data: bytes, row: dict, dictionary: dict) -> dict:
     start=row['record_offset'];record=data[start:start+316]
@@ -57,10 +87,8 @@ def interpret_record(data: bytes, row: dict, dictionary: dict) -> dict:
     tactics=[x for x in record[198:208] if x]
     formations=[i for i in range(1,len(dictionary['formation'])) if int.from_bytes(record[194:198],'little') & (1<<i)]
     raw_state=record[161]
-    state={0:'DISABLED',1:'ACTIVE_FORCE',2:'ACTIVE_FORCE',3:'ACTIVE_FORCE',4:'ACTIVE_FORCE',
-           5:'UNVERIFIED_STATUS',7:'UNAPPEARED',8:'FREE',9:'DEAD_OR_RETIRED'}.get(raw_state,'UNVERIFIED_STATUS')
-    # Code 5 is intentionally not collapsed into FREE: old references did so,
-    # but CE can preserve an independent wandering-party state.
+    if raw_state not in STATE_CODES:raise FormatError(f'Unknown officer state {raw_state}')
+    state=STATE_CODES[raw_state]
     out={'id':row['source_id'],'name':row['name'],'courtesy_name':row['courtesy_name'],
          'state':state,'raw_state':raw_state,'force_id':record[156] or None,
          'settlement_id':u16(record,157) or None,'settlement_name':label('settlement',u16(record,157)),

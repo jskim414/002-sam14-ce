@@ -18,7 +18,7 @@
   <p id="context-status" class="muted" role="status"></p>
   <div id="quick" class="quick"><button data-state="" aria-pressed="true">전체</button><button data-state="ACTIVE_FORCE">현역</button><button data-state="FREE">재야</button><button data-state="UNAPPEARED">미등장</button></div>
   <div id="stash-controls" class="quick" hidden><button data-stash="favorites">즐겨찾기</button><button data-stash="recent">최근 조회</button><button id="clear-recent">최근 조회 비우기</button><button id="clear-favorites">즐겨찾기 비우기</button></div>
-  <div id="codex-controls" class="quick" hidden><button data-codex="trait">개성</button><button data-codex="policy">정책</button><button data-codex="formation">진형</button><button data-codex="tactic">전법</button></div>
+  <div id="codex-controls" class="quick" hidden><button data-codex="trait">개성</button><button data-codex="policy">정책</button><button data-codex="formation">진형</button><button data-codex="tactic">전법</button><button data-codex="scenic">명승</button><button data-codex="strategy">방책</button><button data-codex="literature">시문</button><button data-codex="merit">공로</button></div>
   <div class="results-bar"><p id="count" role="status" aria-live="polite">데이터를 불러오는 중입니다.</p><label id="sort-label">정렬 <select id="sort"><option value="name">이름순</option><option value="leadership">통솔 높은순</option><option value="strength">무력 높은순</option><option value="intelligence">지력 높은순</option><option value="politics">정치 높은순</option><option value="charisma">매력 높은순</option><option value="policy_level">정책 레벨순</option><option value="appearance_year">등장 빠른순</option></select></label></div>
   <p id="error" class="error" role="alert" hidden></p><p id="cache-status" class="error" role="status" hidden></p><button id="retry" hidden>다시 시도</button>
   <div id="compare-bar" class="quick" hidden><span id="compare-count"></span><button id="compare-open">능력·정책 비교</button><button id="compare-clear">선택 비우기</button></div>
@@ -33,8 +33,8 @@
 <label>주의<select name="doctrine" id="doctrine"></select></label><label>정책<select name="policy" id="policy"></select></label>
 <label>최소 정책 레벨<input name="level_min" type="number" min="0" max="255" placeholder="제한 없음"></label>
 <label>개성 (복수 선택)<select name="trait" id="trait" multiple size="5"></select></label><label>개성 조합<select name="trait_mode"><option value="all">선택한 개성 모두 보유</option><option value="any">하나 이상 보유</option></select></label><label>진형<select name="formation" id="formation"></select></label><label>전법<select name="tactic" id="tactic"></select></label>
-<label>무장 분류<select name="kind"><option value="HISTORICAL">사실 무장</option><option value="BONUS">고대·특전 후보</option><option value="ALL">두 분류 모두</option></select></label>
-</div><p class="muted">고대·특전 후보는 파일에 존재하는 목록이며, 계정별 사용 가능 여부는 아직 확인되지 않았습니다.</p><div class="dialog-actions"><button type="button" id="reset-filters">필터 초기화</button><button class="primary" type="submit">결과 보기</button></div></form></dialog>
+<label>무장 분류<select name="kind"><option value="HISTORICAL">기본 무장</option><option value="BONUS">추가 무장</option><option value="ALL">두 분류 모두</option></select></label>
+</div><p class="muted">추가 무장은 원천 슬롯과 열전으로 대조한 목록이며, 계정별 사용 가능 여부는 아직 확인되지 않았습니다.</p><div class="dialog-actions"><button type="button" id="reset-filters">필터 초기화</button><button class="primary" type="submit">결과 보기</button></div></form></dialog>
 <dialog id="detail" aria-label="무장 상세"><div id="detail-content"></div></dialog>
 <dialog id="data-info"><div class="dialog-head"><h2>데이터 검증 범위</h2><button class="icon" data-close="data-info" aria-label="닫기">×</button></div><div id="coverage-content"></div></dialog>
 <dialog id="comparison" aria-label="무장 비교"><div class="dialog-head"><h2>같은 시나리오에서 비교</h2><button class="icon" data-close="comparison" aria-label="비교 닫기">×</button></div><div id="comparison-content"></div></dialog>

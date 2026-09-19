@@ -1,0 +1,17 @@
+{
+  "pass": true,
+  "mode": "REAL_INTEGRATION",
+  "database_sha256": "bc672cc8746b9213525ed3e235650fb478c88ab8b5dc320bf2ff75f32195ccd1",
+  "test_suite_sha256": "a6a974fbe8f0341d44ec3007c5b2915c84a45eb723c9f1e45b42ffdda2270e4d",
+  "python_version": "3.14.6",
+  "python": {
+    "run": 36,
+    "passed": 36,
+    "failures": 0,
+    "errors": 0,
+    "skipped": []
+  },
+  "javascript_exit_code": 0,
+  "syntax_exit_code": 0,
+  "screen_validation": "EXCLUDED_BY_USER"
+}

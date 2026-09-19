@@ -1,0 +1,70 @@
+{
+  "pass": true,
+  "mode": "SYNTHETIC_CONTRACTS",
+  "database_sha256": null,
+  "test_suite_sha256": "514c38991b6797ec91ad386f752c0dc9d370219ad2e2085bccfded493877f728",
+  "python_version": "3.14.6",
+  "python": {
+    "run": 36,
+    "passed": 23,
+    "failures": 0,
+    "errors": 0,
+    "skipped": [
+      {
+        "id": "test_api_errors_and_routes (test_core.CandidateIntegrationTests.test_api_errors_and_routes)",
+        "reason": "Real integration requires CE_TEST_DATABASE; synthetic tests run separately"
+      },
+      {
+        "id": "test_combined_filters_unique (test_core.CandidateIntegrationTests.test_combined_filters_unique)",
+        "reason": "Real integration requires CE_TEST_DATABASE; synthetic tests run separately"
+      },
+      {
+        "id": "test_scenario_mode_and_pending_rejected (test_core.CandidateIntegrationTests.test_scenario_mode_and_pending_rejected)",
+        "reason": "Real integration requires CE_TEST_DATABASE; synthetic tests run separately"
+      },
+      {
+        "id": "test_source_identity_and_policy (test_core.CandidateIntegrationTests.test_source_identity_and_policy)",
+        "reason": "Real integration requires CE_TEST_DATABASE; synthetic tests run separately"
+      },
+      {
+        "id": "test_structure_and_release_block (test_core.CandidateIntegrationTests.test_structure_and_release_block)",
+        "reason": "Real integration requires CE_TEST_DATABASE; synthetic tests run separately"
+      },
+      {
+        "id": "test_compare_and_stored_order (test_extended.ExtendedCandidateTests.test_compare_and_stored_order)",
+        "reason": "Real integration requires CE_TEST_DATABASE"
+      },
+      {
+        "id": "test_dlc_dates_rows_and_state_correction (test_extended.ExtendedCandidateTests.test_dlc_dates_rows_and_state_correction)",
+        "reason": "Real integration requires CE_TEST_DATABASE"
+      },
+      {
+        "id": "test_marriage_and_sibling_groups_keep_identity (test_extended.ExtendedCandidateTests.test_marriage_and_sibling_groups_keep_identity)",
+        "reason": "Real integration requires CE_TEST_DATABASE"
+      },
+      {
+        "id": "test_multitrait_all_any_and_relation (test_extended.ExtendedCandidateTests.test_multitrait_all_any_and_relation)",
+        "reason": "Real integration requires CE_TEST_DATABASE"
+      },
+      {
+        "id": "test_new_catalogs_and_effect_reference (test_extended.ExtendedCandidateTests.test_new_catalogs_and_effect_reference)",
+        "reason": "Real integration requires CE_TEST_DATABASE"
+      },
+      {
+        "id": "test_non_discrete_personality_is_rejected (test_extended.ExtendedCandidateTests.test_non_discrete_personality_is_rejected)",
+        "reason": "Real integration requires CE_TEST_DATABASE"
+      },
+      {
+        "id": "test_personality_raw_encoding_and_known_samples (test_extended.ExtendedCandidateTests.test_personality_raw_encoding_and_known_samples)",
+        "reason": "Real integration requires CE_TEST_DATABASE"
+      },
+      {
+        "id": "test_tactics_and_source_descriptions (test_extended.ExtendedCandidateTests.test_tactics_and_source_descriptions)",
+        "reason": "Real integration requires CE_TEST_DATABASE"
+      }
+    ]
+  },
+  "javascript_exit_code": 0,
+  "syntax_exit_code": 0,
+  "screen_validation": "EXCLUDED_BY_USER"
+}

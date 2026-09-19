@@ -1,0 +1,259 @@
+{
+  "executable_sha256": "07a047826cfc316dc9e3db6bfddc72b85e8d7de99743cc73a2d7199a1ad3aa40",
+  "default_coefficient_sites": [
+    {
+      "effect_id": 1,
+      "instruction_va": "0x14041b1fa",
+      "constant_va": "0x141a4a6e8",
+      "constant_file_offset": 27558632,
+      "constant": 1
+    },
+    {
+      "effect_id": 2,
+      "instruction_va": "0x14041b207",
+      "constant_va": "0x141a4a6f4",
+      "constant_file_offset": 27558644,
+      "constant": 1
+    },
+    {
+      "effect_id": 3,
+      "instruction_va": "0x14041b214",
+      "constant_va": "0x141a4a700",
+      "constant_file_offset": 27558656,
+      "constant": 1
+    },
+    {
+      "effect_id": 4,
+      "instruction_va": "0x14041b221",
+      "constant_va": "0x141a4a70c",
+      "constant_file_offset": 27558668,
+      "constant": 1
+    },
+    {
+      "effect_id": 5,
+      "instruction_va": "0x14041b22e",
+      "constant_va": "0x141a4a718",
+      "constant_file_offset": 27558680,
+      "constant": 1
+    },
+    {
+      "effect_id": 6,
+      "instruction_va": "0x14041b23b",
+      "constant_va": "0x141a4a724",
+      "constant_file_offset": 27558692,
+      "constant": 1
+    },
+    {
+      "effect_id": 7,
+      "instruction_va": "0x14041b248",
+      "constant_va": "0x141a4a730",
+      "constant_file_offset": 27558704,
+      "constant": 1
+    },
+    {
+      "effect_id": 8,
+      "instruction_va": "0x14041b255",
+      "constant_va": "0x141a4a73c",
+      "constant_file_offset": 27558716,
+      "constant": 1
+    },
+    {
+      "effect_id": 9,
+      "instruction_va": "0x14041b262",
+      "constant_va": "0x141a4a744",
+      "constant_file_offset": 27558724,
+      "constant": 1
+    },
+    {
+      "effect_id": 10,
+      "instruction_va": "0x140268099",
+      "constant_va": "0x141a49798",
+      "constant_file_offset": 27554712,
+      "constant": 1
+    },
+    {
+      "effect_id": 12,
+      "instruction_va": "0x14041b26f",
+      "constant_va": "0x141a47c24",
+      "constant_file_offset": 27547684,
+      "constant": 1
+    },
+    {
+      "effect_id": 19,
+      "instruction_va": "0x1401698cb",
+      "constant_va": "0x141a489c8",
+      "constant_file_offset": 27551176,
+      "constant": 1
+    },
+    {
+      "effect_id": 20,
+      "instruction_va": "0x1401912de",
+      "constant_va": "0x141a48d54",
+      "constant_file_offset": 27552084,
+      "constant": 1
+    },
+    {
+      "effect_id": 21,
+      "instruction_va": "0x140169860",
+      "constant_va": "0x141a489bc",
+      "constant_file_offset": 27551164,
+      "constant": 1
+    },
+    {
+      "effect_id": 22,
+      "instruction_va": "0x14029ccd8",
+      "constant_va": "0x141a48c64",
+      "constant_file_offset": 27551844,
+      "constant": 1
+    },
+    {
+      "effect_id": 23,
+      "instruction_va": "0x14032163d",
+      "constant_va": "0x141a488e0",
+      "constant_file_offset": 27550944,
+      "constant": 1
+    },
+    {
+      "effect_id": 25,
+      "instruction_va": "0x14026a911",
+      "constant_va": "0x141a48340",
+      "constant_file_offset": 27549504,
+      "constant": 1
+    },
+    {
+      "effect_id": 31,
+      "instruction_va": "0x140268526",
+      "constant_va": "0x141a4a050",
+      "constant_file_offset": 27556944,
+      "constant": 1
+    },
+    {
+      "effect_id": 32,
+      "instruction_va": "0x1402672d1",
+      "constant_va": "0x141a4a250",
+      "constant_file_offset": 27557456,
+      "constant": 1
+    },
+    {
+      "effect_id": 37,
+      "instruction_va": "0x1402650ce",
+      "constant_va": "0x141a4a248",
+      "constant_file_offset": 27557448,
+      "constant": 1
+    },
+    {
+      "effect_id": 38,
+      "instruction_va": "0x1402651bf",
+      "constant_va": "0x141a4a058",
+      "constant_file_offset": 27556952,
+      "constant": 1
+    },
+    {
+      "effect_id": 39,
+      "instruction_va": "0x1402b307b",
+      "constant_va": "0x141a49a04",
+      "constant_file_offset": 27555332,
+      "constant": 1
+    },
+    {
+      "effect_id": 40,
+      "instruction_va": "0x1402b92ef",
+      "constant_va": "0x141a4a1bc",
+      "constant_file_offset": 27557308,
+      "constant": 1
+    },
+    {
+      "effect_id": 41,
+      "instruction_va": "0x1402692b9",
+      "constant_va": "0x141a494b0",
+      "constant_file_offset": 27553968,
+      "constant": 1
+    },
+    {
+      "effect_id": 42,
+      "instruction_va": "0x1402a5075",
+      "constant_va": "0x141a49a04",
+      "constant_file_offset": 27555332,
+      "constant": 1
+    },
+    {
+      "effect_id": 11,
+      "instruction_va": "0x140268b52",
+      "constant_va": "0x141a4a1d4",
+      "constant_file_offset": 27557332,
+      "constant": 1
+    },
+    {
+      "effect_id": 29,
+      "instruction_va": "0x140265f5f",
+      "constant_va": "0x141a4a038",
+      "constant_file_offset": 27556920,
+      "constant": 1
+    },
+    {
+      "effect_id": 30,
+      "instruction_va": "0x14026a29c",
+      "constant_va": "0x141a4a044",
+      "constant_file_offset": 27556932,
+      "constant": 1
+    },
+    {
+      "effect_id": 28,
+      "instruction_va": "0x1402bcb13",
+      "arithmetic": "base * effect * coefficient / 100",
+      "constant_va": "0x141a47f3c",
+      "constant_file_offset": 27548476,
+      "constant": 1,
+      "coefficient_instruction_va": "0x1402bcae0"
+    },
+    {
+      "effect_id": 10,
+      "instruction_va": "0x1402680d6",
+      "constant_va": "0x141a4978c",
+      "constant_file_offset": 27554700,
+      "constant": 100,
+      "role": "default morale cap"
+    }
+  ],
+  "level_reader_va": "0x14022bae0",
+  "level_range": [
+    1,
+    10
+  ],
+  "field_descriptions": "fixdataexce section 26, record +22..113",
+  "units": {
+    "1": "BASE_PERCENT",
+    "2": "BASE_PERCENT",
+    "3": "BASE_PERCENT",
+    "4": "BASE_PERCENT",
+    "5": "BASE_PERCENT",
+    "6": "BASE_PERCENT",
+    "7": "BASE_PERCENT",
+    "8": "BASE_PERCENT",
+    "9": "BASE_PERCENT",
+    "10": "BASE_MORALE_POINTS",
+    "11": "BASE_PERCENT",
+    "12": "BASE_PERCENT",
+    "19": "BASE_PERCENT",
+    "20": "BASE_PERCENT",
+    "21": "BASE_PERCENT",
+    "22": "BASE_PERCENT",
+    "23": "BASE_PERCENT",
+    "24": "UNLOCK",
+    "25": "BASE_PERCENT",
+    "28": "BASE_PERCENT",
+    "29": "BASE_PERCENT",
+    "30": "BASE_PERCENT",
+    "31": "BASE_PERCENT",
+    "32": "DURABILITY_POINTS",
+    "37": "ORDERS",
+    "38": "BASE_PERCENT",
+    "39": "BASE_PERCENT",
+    "40": "BASE_PERCENT",
+    "41": "BASE_PERCENT",
+    "42": "BASE_PERCENT",
+    "13": "UNLOCK",
+    "14": "UNLOCK"
+  },
+  "scope": "Static baseline only. Arithmetic units inferred from executable instructions and default constants; not a saved-game simulation or screen validation."
+}

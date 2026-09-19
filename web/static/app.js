@@ -53,6 +53,17 @@ function navigate(changes, {replace=false}={}) {
   history[replace?'replaceState':'pushState'](state,'','/?'+p.toString());
   remember(); render();
 }
+function effectValue(item, effect) {
+  const sign=effect.attributes?.direction==='DECREASE'?'−':'+';
+  if(item.unit==='BASE_PERCENT')return `${sign}${item.raw_value}%`;
+  if(item.unit==='BASE_MORALE_POINTS'||item.unit==='DURABILITY_POINTS')return `${sign}${item.raw_value}`;
+  if(item.unit==='ORDERS')return `${sign}${item.raw_value}개`;
+  return String(item.raw_value);
+}
+function levelEffects(row) {
+  if(!row?.level_effects?.length)return '';
+  return `<details class="level-effects"><summary>레벨별 기본 효과</summary><p class="muted">${esc(row.level_scope)}</p>${row.level_effects.map(effect=>`<h4>${esc(effect.name)}</h4><p>${esc(effect.description||'')}</p>${effect.attributes?.numeric_applicability==='NOT_APPLICABLE'?'':`<div class="table-scroll"><table><thead><tr><th>효과 레벨</th>${effect.levels.map(x=>`<th>${x.level}</th>`).join('')}</tr></thead><tbody><tr><th>기본 효과</th>${effect.levels.map(x=>`<td>${esc(effectValue(x,effect))}</td>`).join('')}</tr></tbody></table></div>`}`).join('')}</details>`;
+}
 function stats(row) { return `<div class="stats">${statKeys.map((k,i)=>`<div><span class="stat-label">${statLabels[i]}</span><strong class="stat-value">${esc(row[k])}</strong></div>`).join('')}</div>`; }
 function policy(row) { return `${esc(row.doctrine || '주의 미확인')} · <b>${esc(row.policy || '정책 미확인')}</b> · ${row.policy_level == null ? '레벨 미확인' : 'Lv.'+esc(row.policy_level)}`; }
 function favoriteButton(id) { return `<button class="favorite" data-favorite="${id}" aria-pressed="${favorites.includes(id)}" aria-label="즐겨찾기 ${favorites.includes(id)?'해제':'추가'}">${favorites.includes(id)?'★':'☆'}</button>`; }
@@ -66,7 +77,7 @@ function setOptions(element,rows,placeholder,value) { element.innerHTML = `<opti
 function syncControls() {
   const p=params();$('#q').value=p.get('q')||'';$('#scenario').value=scenarioId();$('#sort').value=p.get('sort')||'name';
   $('#page-title').textContent={officers:'필요한 무장을, 바로.',codex:'특징에서 무장으로.',stash:'다시 찾는 무장들.'}[tab()] || '무장 참조';
-  $('#page-description').textContent={officers:'능력부터 정책과 인간관계까지 살펴보세요.',codex:'개성·정책·진형을 골라 보유 무장을 찾으세요.',stash:'이 기기에서 저장하거나 최근 살펴본 무장입니다.'}[tab()] || '';
+  $('#page-description').textContent={officers:'능력부터 정책과 인간관계까지 살펴보세요.',codex:'개성·정책·전법과 CE 명승·방책·시문·공로을 살펴보세요.',stash:'이 기기에서 저장하거나 최근 살펴본 무장입니다.'}[tab()] || '';
   $('#q').placeholder=tab()==='codex'?'도감 이름을 입력하세요':'무장 이름 또는 자를 입력하세요';
   $('#quick').hidden=tab()!=='officers';$('#stash-controls').hidden=tab()!=='stash';$('#codex-controls').hidden=tab()!=='codex';
   $('#filter-open').hidden=tab()==='codex';$('#sort-label').hidden=tab()==='codex';
@@ -86,10 +97,10 @@ async function render() {
   const listKey=JSON.stringify([listParams.toString(),stashMode,codexKind,tab()==='stash'?[favorites,recent]:[]]);
   if(tab()==='officers'&&lastListKey===listKey){$('#results').classList.remove('loading');if(!selected){window.scrollTo(0,history.state?.scroll||0);detailOrigin?.focus?.({preventScroll:true});}return;}
   if(tab()==='codex') {
-    let full;try{full=await api((codexKind==='policy'?'policies':codexKind+'s'),listController.signal);}catch(error){if(error.name!=='AbortError')showError(error);return;}if(version!==listVersion)return;
+    let full;try{full=await api(({policy:'policies',strategy:'strategies'}[codexKind]||codexKind+'s'),listController.signal);}catch(error){if(error.name!=='AbortError')showError(error);return;}if(version!==listVersion)return;
     const rows=full.items.filter(x=>x.name.includes(p.get('q')||''));
     $('#count').textContent=`${rows.length}개 항목`;$('#pagination').hidden=true;
-    $('#results').innerHTML=rows.map(r=>`<article class="card codex-card"><h3>${esc(r.name)}</h3><p class="muted">${esc(r.description||'원천 효과 설명 미수록')}</p>${r.components?.length?`<details><summary>포함 효과</summary>${r.components.map(x=>`<p class="muted"><b>${esc(x.name)}</b> · ${esc(x.description||'')}</p>`).join('')}</details>`:''}<button data-codex-filter="${codexKind}:${r.id}">보유 무장 보기 →</button></article>`).join('') || '<p class="empty">일치하는 항목이 없습니다.</p>';
+    $('#results').innerHTML=rows.map(r=>`<article class="card codex-card"><h3>${esc(r.name)}</h3>${r.attributes?.author?`<p class="muted">${esc(r.attributes.author)} · ${esc(r.attributes.era)}</p>`:''}<p class="muted">${esc(r.description||'원천 효과 설명 미수록')}</p>${r.components?.length?`<details><summary>포함 효과</summary>${r.components.map(x=>`<p class="muted"><b>${esc(x.name)}</b> · ${esc(x.description||'')}</p>`).join('')}</details>`:''}${['trait','policy','formation','tactic','doctrine'].includes(codexKind)?`<button data-codex-filter="${codexKind}:${r.id}">보유 무장 보기 →</button>`:''}${levelEffects(r)}</article>`).join('') || '<p class="empty">일치하는 항목이 없습니다.</p>';
     $('#results').classList.remove('loading');return;
   }
   $('#results').classList.add('loading');$('#count').textContent='검색 중…';
@@ -126,7 +137,7 @@ async function openDetail(id) {
     $('#detail-content').innerHTML=`<div class="detail-hero"><div><p class="eyebrow">CE · 시나리오 시작 데이터</p><h2>${esc(row.name)}</h2><p class="subtitle">${esc(row.courtesy_name)} · ${esc(row.state_label)}<br>${esc(row.force_name?row.force_name+' 세력':'소속 세력 없음')} · ${esc(row.settlement_name||'위치 미확인')}</p></div><div>${favoriteButton(id)}<button class="icon" data-close-detail aria-label="이전 화면">×</button></div></div>
     <nav class="detail-nav" aria-label="상세 섹션"><button data-section="summary">요약</button><button data-section="personality">내면</button><button data-section="relations">관계</button><button data-section="battle">전투</button></nav>
     <section id="summary" class="detail-section">${stats(row)}<p class="policy-line">${policy(row)}</p><p class="muted">${esc(row.policy_detail?.description||'')}</p>${row.policy_detail?.components?.length?`<details><summary>정책에 포함된 효과</summary>${row.policy_detail.components.map(x=>`<p class="muted"><b>${esc(x.name)}</b> · ${esc(x.description||'')}</p>`).join('')}</details>`:''}<div class="fact-grid"><p><span>등장</span><strong>${esc(row.appearance_year??'미확인')}${row.appearance_year?'년':''}</strong></p><p><span>생몰년</span><strong>${esc(row.birth_year??'?')}–${esc(row.death_year??'?')}</strong></p><p><span>상성</span><strong>${esc(row.affinity??'미확인')}</strong></p></div></section>
-    <section id="personality" class="detail-section"><h3>내면</h3><div class="personality-grid">${row.personality.map(x=>`<div><span>${esc(x.label)}</span><b>${x.value==null?'확인 중':esc(x.value)+' / 5'}</b></div>`).join('')}</div><p class="muted">내면은 원천 수치와 형식 연구를 교차 검증한 값입니다. 게임 화면 대조는 제외되어 있습니다. 미확인은 숫자로 바꾸지 않습니다.</p></section>
+    ${levelEffects(row.policy_detail)}<section id="personality" class="detail-section"><h3>내면</h3><div class="personality-grid">${row.personality.map(x=>`<div><span>${esc(x.label)}</span><b>${x.value==null?'확인 중':esc(x.value)+' / 5'}</b></div>`).join('')}</div><p class="muted">내면은 원천 수치와 형식 연구를 교차 검증한 값입니다. 게임 화면 대조는 제외되어 있습니다. 미확인은 숫자로 바꾸지 않습니다.</p></section>
     <section id="relations" class="detail-section"><h3>인간관계</h3><p class="muted">선택한 시나리오의 방향별 관계입니다. 게임 화면 대조는 아직 완료되지 않았습니다.</p>${groups.map(([direction,type,title])=>{const items=row.relationships[direction].filter(x=>x.type===type);return `<div class="relationship-group"><h4>${title}</h4><div class="tags">${items.length?items.map(x=>`<button class="tag" data-officer="${x.target_id}">${esc(x.target_name)}${x.courtesy_name?' · '+esc(x.courtesy_name):''}</button>`).join(''):'<span class="muted">원천 슬롯에 대상 없음 · 검증 대기</span>'}</div></div>`;}).join('')}<p class="muted">배우자는 원천의 직접 참조, 의형제는 같은 장형 ID를 가진 그룹입니다.</p></section>
     <section id="battle" class="detail-section"><h3>개성</h3><div class="tags">${row.traits.map(t=>`<button class="tag" data-detail-filter="trait:${t.id}">${esc(t.name)}</button>`).join('')||'<span class="muted">원천 슬롯에 없음</span>'}</div><h3 class="detail-section">진형</h3><div class="tags">${row.formations.map(t=>`<button class="tag" data-detail-filter="formation:${t.id}">${esc(t.name)}</button>`).join('')||'<span class="muted">원천 슬롯에 없음</span>'}</div><h3 class="detail-section">전법</h3><div class="tags">${row.tactics.map(t=>`<button class="tag" data-detail-filter="tactic:${t.id}">${esc(t.name)}</button>`).join('')||'<span class="muted">원천 슬롯에 없음</span>'}</div><details><summary>개성·진형 설명</summary>${[...row.traits,...row.formations].filter(x=>x.description).map(x=>`<p class="muted"><b>${esc(x.name)}</b> · ${esc(x.description)}</p>`).join('')}</details></section>
     <section class="detail-section"><h3>데이터 정보</h3><p class="evidence">${esc(meta.release_id)}<br>${esc(row.evidence.relative_path)}<br>원천 ID ${row.officer_id} · 해제 데이터 위치 ${row.record_offset}<br>검증 상태: 원천 레코드 추출, 게임 화면 대조 대기</p><button id="copy-link">현재 무장 링크 복사</button><button data-share-detail>QR로 이어보기</button><p id="copy-status" class="muted" role="status"></p></section>`;

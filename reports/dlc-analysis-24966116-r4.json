@@ -1,0 +1,120 @@
+{
+  "pass": true,
+  "build_id": "24966116",
+  "inventory_sha256": "8d2d7ddd4ee365f3aac132b072fa6d8ac67f75be524613457340e176ce09ceca",
+  "method": "DLC_LCG_XOR_V1 -> SN14SCEXVER0001 -> LWC",
+  "seed": "(scenario_code + Steam DLC app id) modulo 2^32",
+  "step": "state = state * 0x6c078965 + 0x3039 modulo 2^32; XOR byte = ((state >> 16) XOR (state >> 24)) AND 255",
+  "files": [
+    {
+      "file_name": "scedaexce32.s14",
+      "size_bytes": 132541,
+      "sha256": "0ccc9a81b1354ccbe2de1a3c7649d26b37bc1c634ceeb29dd5246fb88df16517",
+      "wrapper": "DLC_LCG_XOR_V1",
+      "unwrapped_sha256": "f022e408487bedfbe3f128b7a4e3e27c55369ac45fba16363fe14de313a6c657",
+      "header_version": 102,
+      "lwc_offset": 754,
+      "scenario": {
+        "id": "ce-32",
+        "source_code": 32,
+        "name": "曹操の誤算",
+        "start_year": 196,
+        "start_month": 6,
+        "mode": "STANDARD",
+        "mode_verification": "SOURCE_MESSAGE_CROSS_CHECKED"
+      },
+      "status": "DECOMPRESSED",
+      "decoded_size": 534491,
+      "decoded_sha256": "ecbdb07d257acf4857b22068281d022de8aeb85ea0c379d14d6398f9e12f6f02",
+      "relative_path": "DLC/0010_JP/scedaexce32.s14",
+      "steam_app_id": 4598950
+    },
+    {
+      "file_name": "scedaexce33.s14",
+      "size_bytes": 132695,
+      "sha256": "b231e84de90420b1196900a98eb82fdc0063d87c8f097a32b98d8d270a3c8dd6",
+      "wrapper": "DLC_LCG_XOR_V1",
+      "unwrapped_sha256": "7db10ebd4c4dcb93c622db1f7a799224321bf2aa4d0a299e114c1c94b5bca201",
+      "header_version": 102,
+      "lwc_offset": 754,
+      "scenario": {
+        "id": "ce-33",
+        "source_code": 33,
+        "name": "覇気雄心",
+        "start_year": 202,
+        "start_month": 8,
+        "mode": "STANDARD",
+        "mode_verification": "SOURCE_MESSAGE_CROSS_CHECKED"
+      },
+      "status": "DECOMPRESSED",
+      "decoded_size": 534491,
+      "decoded_sha256": "d788187a2310a5bc0a77ded7811f4b7da1521ac9c9b9ac9bd776d0c1ba1b9701",
+      "relative_path": "DLC/0010_JP/scedaexce33.s14",
+      "steam_app_id": 4598960
+    },
+    {
+      "file_name": "scedaexce32.s14",
+      "size_bytes": 130641,
+      "sha256": "78f70ca1599914470f773e47b76bab494754f4647d0a666c546ecc258b3612ea",
+      "wrapper": "DLC_LCG_XOR_V1",
+      "unwrapped_sha256": "0f569796c11cb76325ed05fe0c027d6d3af54e622764459885d67954dd85957c",
+      "header_version": 102,
+      "lwc_offset": 754,
+      "scenario": {
+        "id": "ce-32",
+        "source_code": 32,
+        "name": "조조의 오산",
+        "start_year": 196,
+        "start_month": 6,
+        "mode": "STANDARD",
+        "mode_verification": "SOURCE_MESSAGE_CROSS_CHECKED"
+      },
+      "status": "DECOMPRESSED",
+      "decoded_size": 668563,
+      "decoded_sha256": "eed953361a2d9af7d68e3371f6c7a57c6858b4625d580b46988e94ac7b6e2760",
+      "relative_path": "DLC/0010_KO/scedaexce32.s14",
+      "steam_app_id": 4598950,
+      "officer_block": {
+        "offset": 44564,
+        "count": 1851,
+        "record_size": 316,
+        "named_records": 1401
+      },
+      "nonzero_ids": 1400,
+      "duplicate_ids": 0
+    },
+    {
+      "file_name": "scedaexce33.s14",
+      "size_bytes": 130816,
+      "sha256": "91fed3d44114483d03e0e6003721e30d3c8bd8a2392ff81bbc9fe88a2808f61f",
+      "wrapper": "DLC_LCG_XOR_V1",
+      "unwrapped_sha256": "7999d81b4eaba1aa07e6541ef33b9b7d71f2b9cbd4afbaa600daeae52390ed1b",
+      "header_version": 102,
+      "lwc_offset": 754,
+      "scenario": {
+        "id": "ce-33",
+        "source_code": 33,
+        "name": "패기웅심",
+        "start_year": 202,
+        "start_month": 8,
+        "mode": "STANDARD",
+        "mode_verification": "SOURCE_MESSAGE_CROSS_CHECKED"
+      },
+      "status": "DECOMPRESSED",
+      "decoded_size": 668563,
+      "decoded_sha256": "2680b84c0736765b697bdbd94b21a453a77d6def125c57dcc3289a38ad67642b",
+      "relative_path": "DLC/0010_KO/scedaexce33.s14",
+      "steam_app_id": 4598960,
+      "officer_block": {
+        "offset": 44564,
+        "count": 1851,
+        "record_size": 316,
+        "named_records": 1401
+      },
+      "nonzero_ids": 1400,
+      "duplicate_ids": 0
+    }
+  ],
+  "scope": "Read-only installed data analysis; no game patch, no game execution, no entitlement claim",
+  "screen_validation": "EXCLUDED_BY_USER"
+}

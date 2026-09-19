@@ -3,7 +3,10 @@ import argparse
 import json
 from pathlib import Path
 import sqlite3
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from common import sha256,write_json
+from web.release_gate import evaluate
 
 def validate(database: Path) -> dict:
     conn=sqlite3.connect(database.resolve(strict=True).as_uri()+'?mode=ro',uri=True)
@@ -20,7 +23,7 @@ def validate(database: Path) -> dict:
         checks['source_lineage']=not conn.execute('SELECT 1 FROM officer_state WHERE record_offset<0 OR length(record_sha256)<>64').fetchall()
         checks['policy_reference']=not conn.execute("SELECT 1 FROM officer_state s LEFT JOIN dictionary d ON d.kind='policy' AND d.id=s.policy_id WHERE s.policy_id IS NOT NULL AND d.id IS NULL LIMIT 1").fetchall()
         checks['doctrine_reference']=not conn.execute("SELECT 1 FROM officer_state s LEFT JOIN dictionary d ON d.kind='doctrine' AND d.id=s.doctrine_id WHERE s.doctrine_id IS NOT NULL AND d.id IS NULL LIMIT 1").fetchall()
-        checks['policy_components']=not conn.execute("SELECT 1 FROM policy_component p LEFT JOIN dictionary a ON a.kind='policy' AND a.id=p.policy_id LEFT JOIN dictionary b ON b.kind='policy' AND b.id=p.component_id WHERE a.id IS NULL OR b.id IS NULL OR p.slot NOT BETWEEN 0 AND 7 LIMIT 1").fetchall()
+        checks['policy_components']=not conn.execute("SELECT 1 FROM policy_component p LEFT JOIN dictionary a ON a.kind='policy' AND a.id=p.policy_id LEFT JOIN dictionary b ON b.kind='policy_effect' AND b.id=p.component_id WHERE a.id IS NULL OR b.id IS NULL OR p.slot NOT BETWEEN 0 AND 7 LIMIT 1").fetchall()
         checks['all_kinship_rows']=conn.execute('SELECT count(*) FROM officer_state').fetchone()[0]==conn.execute('SELECT count(*) FROM officer_kinship').fetchone()[0]
         fields=['integrity','diplomacy','han_attitude','ambition','aggression']
         offsets=dict(integrity=278,diplomacy=290,han_attitude=292,ambition=294,aggression=276)
@@ -29,8 +32,8 @@ def validate(database: Path) -> dict:
             if conn.execute(f"SELECT 1 FROM officer_personality p JOIN officer_state s USING(scenario_id,officer_id) LEFT JOIN personality_evidence e ON e.scenario_id=p.scenario_id AND e.officer_id=p.officer_id AND e.field=? WHERE p.verification='CROSS_CHECKED' AND (p.{field} IS NULL OR p.{field} NOT BETWEEN 1 AND 5 OR e.raw_value IS NULL OR e.raw_value NOT IN(-20,-10,0,10,20) OR p.{field}<>3+e.raw_value/10 OR e.record_offset<>s.record_offset+? OR e.encoding<>'I16_DELTA_10_BASE_3') LIMIT 1",(field,offsets[field])).fetchone():checks['personality_evidence']=False
         profile=conn.execute('SELECT release_ready,blockers_json FROM release_profile').fetchone()
         blockers=json.loads(profile[1])
-        release_ready=bool(profile[0]) and not blockers and all(checks.values())
-        return {'database_sha256':sha256(database),'structural_pass':all(checks.values()),'checks':checks,'release_ready':release_ready,'blockers':blockers}
+        gates=evaluate(conn)
+        return {'database_sha256':sha256(database),'structural_pass':all(checks.values()),'checks':checks,**gates,'release_ready':gates['release_ready'] and all(checks.values()),'blockers':blockers}
     finally:conn.close()
 
 if __name__=='__main__':
