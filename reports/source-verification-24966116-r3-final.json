@@ -1,0 +1,410 @@
+{
+  "database_sha256": "9d3bc856e059d01e9047e0fc86da653df202cc48cf768aab678a0be7097be3a5",
+  "pass": true,
+  "records_checked": 70000,
+  "edges_checked": 151061,
+  "limitation": "ETL equality only; shared layout hypotheses still require game-screen verification",
+  "scenarios": [
+    {
+      "scenario_id": "ce-01",
+      "ids": 1400,
+      "edges": 3010,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-02",
+      "ids": 1400,
+      "edges": 3014,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-03",
+      "ids": 1400,
+      "edges": 3021,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-04",
+      "ids": 1400,
+      "edges": 3023,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-05",
+      "ids": 1400,
+      "edges": 3026,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-06",
+      "ids": 1400,
+      "edges": 3023,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-07",
+      "ids": 1400,
+      "edges": 3017,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-08",
+      "ids": 1400,
+      "edges": 3075,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-09",
+      "ids": 1400,
+      "edges": 3020,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-100",
+      "ids": 1400,
+      "edges": 3008,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-101",
+      "ids": 1400,
+      "edges": 3017,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-102",
+      "ids": 1400,
+      "edges": 3020,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-103",
+      "ids": 1400,
+      "edges": 3017,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-104",
+      "ids": 1400,
+      "edges": 3013,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-12",
+      "ids": 1400,
+      "edges": 3023,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-13",
+      "ids": 1400,
+      "edges": 3021,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-14",
+      "ids": 1400,
+      "edges": 3018,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-15",
+      "ids": 1400,
+      "edges": 3011,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-150",
+      "ids": 1400,
+      "edges": 3014,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-151",
+      "ids": 1400,
+      "edges": 3001,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-152",
+      "ids": 1400,
+      "edges": 3015,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-153",
+      "ids": 1400,
+      "edges": 2997,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-154",
+      "ids": 1400,
+      "edges": 3015,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-16",
+      "ids": 1400,
+      "edges": 3007,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-17",
+      "ids": 1400,
+      "edges": 3012,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-18",
+      "ids": 1400,
+      "edges": 3025,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-21",
+      "ids": 1400,
+      "edges": 3018,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-22",
+      "ids": 1400,
+      "edges": 3024,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-23",
+      "ids": 1400,
+      "edges": 3023,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-24",
+      "ids": 1400,
+      "edges": 3015,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-25",
+      "ids": 1400,
+      "edges": 3061,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-26",
+      "ids": 1400,
+      "edges": 3010,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-27",
+      "ids": 1400,
+      "edges": 3023,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-28",
+      "ids": 1400,
+      "edges": 3019,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-30",
+      "ids": 1400,
+      "edges": 3016,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-31",
+      "ids": 1400,
+      "edges": 3045,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-34",
+      "ids": 1400,
+      "edges": 3036,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-35",
+      "ids": 1400,
+      "edges": 3007,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-55",
+      "ids": 1400,
+      "edges": 3022,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-56",
+      "ids": 1400,
+      "edges": 3011,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-57",
+      "ids": 1400,
+      "edges": 3020,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-58",
+      "ids": 1400,
+      "edges": 3023,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-59",
+      "ids": 1400,
+      "edges": 3019,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-60",
+      "ids": 1400,
+      "edges": 3024,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-61",
+      "ids": 1400,
+      "edges": 3024,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-62",
+      "ids": 1400,
+      "edges": 3016,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-63",
+      "ids": 1400,
+      "edges": 3073,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-71",
+      "ids": 1400,
+      "edges": 3023,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-72",
+      "ids": 1400,
+      "edges": 3023,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "scenario_id": "ce-73",
+      "ids": 1400,
+      "edges": 3023,
+      "record_slots": 1851,
+      "pass": true,
+      "mismatches": []
+    }
+  ],
+  "issues": []
+}

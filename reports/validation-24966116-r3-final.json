@@ -1,0 +1,27 @@
+{
+  "database_sha256": "9d3bc856e059d01e9047e0fc86da653df202cc48cf768aab678a0be7097be3a5",
+  "structural_pass": true,
+  "checks": {
+    "integrity": true,
+    "foreign_keys": true,
+    "expected_rows": true,
+    "relationship_scope_membership": true,
+    "no_self_relationship": true,
+    "all_personality_rows": true,
+    "unverified_personality_not_fabricated": true,
+    "all_files_classified": true,
+    "source_lineage": true,
+    "policy_reference": true,
+    "doctrine_reference": true,
+    "policy_components": true,
+    "all_kinship_rows": true,
+    "personality_evidence": true
+  },
+  "release_ready": false,
+  "blockers": [
+    "특전 시나리오 32·33의 본문 해석 미완료",
+    "원천 추출과 교차 검증 완료 필드의 게임 화면 검증은 사용자 요청으로 제외",
+    "일부 무장·상태·모드·이용권 분류는 의미 검증 필요",
+    "웹 시각 검증 및 Android/iOS 실기기 검증은 사용자 요청으로 제외"
+  ]
+}

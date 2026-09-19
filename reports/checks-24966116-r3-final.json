@@ -1,0 +1,32 @@
+[
+  {
+    "command": [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-v"
+    ],
+    "exit_code": 0,
+    "log": ".artifacts/final-check-0.log"
+  },
+  {
+    "command": [
+      "npm.cmd",
+      "test"
+    ],
+    "exit_code": 0,
+    "log": ".artifacts/final-check-1.log"
+  },
+  {
+    "command": [
+      "npm.cmd",
+      "run",
+      "check"
+    ],
+    "exit_code": 0,
+    "log": ".artifacts/final-check-2.log"
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "screen_verification": "EXCLUDED_BY_USER",
+  "environment": "Local HTTP subprocess only; not Vercel cold start",
+  "packages": {
+    "ce-r3-review": {
+      "status": 200,
+      "local_process_start_to_first_response_ms": 967.781,
+      "detail_and_module_pass": true,
+      "release_id": "ce-ko-build-24966116-r3",
+      "public_build_gate_exit_code": 1,
+      "public_handler_blocks_review": true
+    },
+    "ce-r3-restored": {
+      "status": 200,
+      "local_process_start_to_first_response_ms": 941.508,
+      "detail_and_module_pass": true,
+      "release_id": "ce-ko-build-24966116-r3",
+      "public_build_gate_exit_code": 1,
+      "public_handler_blocks_review": true
+    },
+    "ce-maintenance": {
+      "status": 503,
+      "local_process_start_to_first_response_ms": 145.06,
+      "public_build_gate_exit_code": 0
+    }
+  }
+}

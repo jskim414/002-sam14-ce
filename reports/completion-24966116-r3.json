@@ -1,0 +1,157 @@
+{
+  "code_git_sha": "04c528907ee4418c58dc4b94bf7f8e8a3b9f922f",
+  "profile_key": "ce-ko-build-24966116-r3",
+  "database_path": "db/ce-24966116-r3.final.db",
+  "database_sha256": "9d3bc856e059d01e9047e0fc86da653df202cc48cf768aab678a0be7097be3a5",
+  "database_bytes": 106897408,
+  "content_sha256": "f061500d3993a3aca28702aa7af6144f69ba1a23b8649f16152e1892f0691021",
+  "parser_sha256": "cee32d46c8a0e66363ee4ef57c4e0e0aa2f7ac8c78f31d485f067a7aafafa34b",
+  "inventory_sha256": "8d2d7ddd4ee365f3aac132b072fa6d8ac67f75be524613457340e176ce09ceca",
+  "counts": {
+    "scenario": 52,
+    "officer": 1400,
+    "officer_state": 70000,
+    "relationship_edge": 151061,
+    "dictionary": 783,
+    "personality_evidence": 350000,
+    "policy_component": 60,
+    "dictionary_detail": 405,
+    "officer_kinship": 70000
+  },
+  "rebuild_file_identical": true,
+  "rebuild_content_identical": true,
+  "python_tests": 25,
+  "javascript_dom_tests": 7,
+  "test_commands": [
+    {
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": ".artifacts/final-check-0.log"
+    },
+    {
+      "command": [
+        "npm.cmd",
+        "test"
+      ],
+      "exit_code": 0,
+      "log": ".artifacts/final-check-1.log"
+    },
+    {
+      "command": [
+        "npm.cmd",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "log": ".artifacts/final-check-2.log"
+    }
+  ],
+  "source_records_checked": 70000,
+  "source_edges_checked": 151061,
+  "source_verification_pass": true,
+  "structural_validation_pass": true,
+  "release_gate_expected_exit_code": 2,
+  "screen_verification": "EXCLUDED_BY_USER",
+  "review_package": {
+    "path": ".artifacts/packages/ce-r3-review",
+    "total_bytes": 107025828,
+    "files": 16,
+    "database_sha256": "9d3bc856e059d01e9047e0fc86da653df202cc48cf768aab678a0be7097be3a5"
+  },
+  "package_http_smoke": {
+    "screen_verification": "EXCLUDED_BY_USER",
+    "environment": "Local HTTP subprocess only; not Vercel cold start",
+    "packages": {
+      "ce-r3-review": {
+        "status": 200,
+        "local_process_start_to_first_response_ms": 967.781,
+        "detail_and_module_pass": true,
+        "release_id": "ce-ko-build-24966116-r3",
+        "public_build_gate_exit_code": 1,
+        "public_handler_blocks_review": true
+      },
+      "ce-r3-restored": {
+        "status": 200,
+        "local_process_start_to_first_response_ms": 941.508,
+        "detail_and_module_pass": true,
+        "release_id": "ce-ko-build-24966116-r3",
+        "public_build_gate_exit_code": 1,
+        "public_handler_blocks_review": true
+      },
+      "ce-maintenance": {
+        "status": 503,
+        "local_process_start_to_first_response_ms": 145.06,
+        "public_build_gate_exit_code": 0
+      }
+    }
+  },
+  "local_performance": {
+    "environment": "Windows localhost Python ThreadingHTTPServer; no mobile network, browser rendering or platform cold-start measurement",
+    "database_sha256": "9d3bc856e059d01e9047e0fc86da653df202cc48cf768aab678a0be7097be3a5",
+    "database_bytes": 106897408,
+    "results": [
+      {
+        "route": "officers?scenario=ce-05",
+        "warm_samples": 100,
+        "first_request_ms": 11.964,
+        "warm_median_ms": 3.289,
+        "warm_p95_ms": 4.086,
+        "warm_max_ms": 4.736
+      },
+      {
+        "route": "officers/147?scenario=ce-05",
+        "warm_samples": 100,
+        "first_request_ms": 3.52,
+        "warm_median_ms": 2.791,
+        "warm_p95_ms": 3.336,
+        "warm_max_ms": 4.287
+      },
+      {
+        "route": "officers/147/relationships?scenario=ce-05",
+        "warm_samples": 100,
+        "first_request_ms": 1.407,
+        "warm_median_ms": 1.261,
+        "warm_p95_ms": 1.532,
+        "warm_max_ms": 2.034
+      },
+      {
+        "route": "officers?scenario=ce-05&state=ACTIVE_FORCE&trait=196&policy=47&doctrine=2&level_min=1&sort=intelligence&order=desc",
+        "warm_samples": 100,
+        "first_request_ms": 1.384,
+        "warm_median_ms": 1.092,
+        "warm_p95_ms": 1.336,
+        "warm_max_ms": 1.535
+      }
+    ]
+  },
+  "legacy_database_sha256": "0f4405d309fd86f84174a5608c4eb78fb9529a578cd57addf402f00753f37118",
+  "legacy_dirty_css_preserved": true,
+  "local_server_health": {
+    "status": "ok",
+    "database": "read-only",
+    "schema_version": 4,
+    "release_id": "ce-ko-build-24966116-r3",
+    "build_id": "24966116",
+    "parser_sha256": "cee32d46c8a0e66363ee4ef57c4e0e0aa2f7ac8c78f31d485f067a7aafafa34b",
+    "release_ready": false
+  },
+  "release_ready": false,
+  "public_deployment_performed": false,
+  "unresolved": [
+    "특전 시나리오 32·33의 본문 해석 미완료",
+    "원천 추출과 교차 검증 완료 필드의 게임 화면 검증은 사용자 요청으로 제외",
+    "일부 무장·상태·모드·이용권 분류는 의미 검증 필요",
+    "웹 시각 검증 및 Android/iOS 실기기 검증은 사용자 요청으로 제외",
+    "Policy numeric level formulas and tactic effect descriptions unresolved",
+    "Additional static CE codices remain follow-up P1 research",
+    "Remote Preview deployment/cold-start and production observation not performed"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "environment": "Windows localhost Python ThreadingHTTPServer; no mobile network, browser rendering or platform cold-start measurement",
+  "database_sha256": "9d3bc856e059d01e9047e0fc86da653df202cc48cf768aab678a0be7097be3a5",
+  "database_bytes": 106897408,
+  "results": [
+    {
+      "route": "officers?scenario=ce-05",
+      "warm_samples": 100,
+      "first_request_ms": 11.964,
+      "warm_median_ms": 3.289,
+      "warm_p95_ms": 4.086,
+      "warm_max_ms": 4.736
+    },
+    {
+      "route": "officers/147?scenario=ce-05",
+      "warm_samples": 100,
+      "first_request_ms": 3.52,
+      "warm_median_ms": 2.791,
+      "warm_p95_ms": 3.336,
+      "warm_max_ms": 4.287
+    },
+    {
+      "route": "officers/147/relationships?scenario=ce-05",
+      "warm_samples": 100,
+      "first_request_ms": 1.407,
+      "warm_median_ms": 1.261,
+      "warm_p95_ms": 1.532,
+      "warm_max_ms": 2.034
+    },
+    {
+      "route": "officers?scenario=ce-05&state=ACTIVE_FORCE&trait=196&policy=47&doctrine=2&level_min=1&sort=intelligence&order=desc",
+      "warm_samples": 100,
+      "first_request_ms": 1.384,
+      "warm_median_ms": 1.092,
+      "warm_p95_ms": 1.336,
+      "warm_max_ms": 1.535
+    }
+  ]
+}
