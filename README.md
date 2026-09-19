@@ -61,4 +61,6 @@ python scripts/benchmark_local.py --database db/ce-next.candidate.db --report re
 - [화면 검증 제외 및 인수 확인표](docs/acceptance-checklist.md)
 - [상세계획 11](plan/11-ce-product-redevelopment-plan.md)
 
-원천·메시지 전문·해제 바이너리·Steam manifest는 비공개 `.artifacts`에 보관합니다. 원격 Git 저장소·Vercel 프로젝트·도메인 연결·공개 배포는 만들지 않았습니다.
+GitHub: [jskim414/002-sam14-ce](https://github.com/jskim414/002-sam14-ce) — 비공개 CE 전용 저장소입니다. 코드·계획·테스트·검증 보고서를 보존합니다.
+
+원천·메시지 전문·해제 바이너리·Steam manifest·DB·백업은 GitHub 업로드에서 제외하고 로컬에 보관합니다. Vercel 프로젝트·도메인 연결·공개 배포는 만들지 않았습니다.
