@@ -60,7 +60,8 @@ python scripts/benchmark_local.py --database db/ce-next.candidate.db --report re
 - [원천·보존 결정](docs/source-analysis.md), [필드 사전](docs/field-dictionary.md)
 - [화면 검증 제외 및 인수 확인표](docs/acceptance-checklist.md)
 - [상세계획 11](plan/11-ce-product-redevelopment-plan.md)
+- [잔여 작업 수행 계획 12](plan/12-ce-remaining-work-plan.md)
 
-GitHub: [jskim414/002-sam14-ce](https://github.com/jskim414/002-sam14-ce) — 공개 CE 전용 저장소입니다. 코드·계획·테스트·검증 보고서를 보존합니다.
+GitHub: [jskim414/002-sam14-ce](https://github.com/jskim414/002-sam14-ce) — 비공개 CE 전용 저장소입니다. 코드·계획·테스트·검증 보고서를 보존합니다.
 
 원천·메시지 전문·해제 바이너리·Steam manifest·DB·백업은 GitHub 업로드에서 제외하고 로컬에 보관합니다. Vercel 프로젝트·도메인 연결·공개 배포는 만들지 않았습니다.
