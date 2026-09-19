@@ -1,0 +1,214 @@
+{
+  "pass": true,
+  "database_sha256": "5a9e938d5d0132c034a2d5c2faacdeb474fb266088a33741e1274d509c533ee9",
+  "code_sha": "10038a2e02cb7ead1c3e03b035172f76088ab2ea",
+  "packages": [
+    {
+      "package": "ce-r4-review",
+      "manifest_sha256": "530b2fa43b7dc8620865517c14300efd3dd8dd26ea372f7e7ee47c45611b4cbc",
+      "checks": [
+        {
+          "path": "/api/v1/health",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/officers?scenario=ce-32",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/officers?scenario=ce-33",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/officers/147?scenario=ce-32",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/officers/147/relationships?scenario=ce-33",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/scenics",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/strategies",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/literatures",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/merits",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/db/sam14.db",
+          "status": 404,
+          "expected": 404,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/state.mjs",
+          "status": 200,
+          "expected": 200,
+          "mime": "text/javascript; charset=utf-8",
+          "pass": true
+        },
+        {
+          "check": "public_build_blocked",
+          "pass": true
+        },
+        {
+          "check": "public_entrypoint_maintenance",
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "package": "ce-r4-restored",
+      "manifest_sha256": "530b2fa43b7dc8620865517c14300efd3dd8dd26ea372f7e7ee47c45611b4cbc",
+      "checks": [
+        {
+          "path": "/api/v1/health",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/officers?scenario=ce-32",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/officers?scenario=ce-33",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/officers/147?scenario=ce-32",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/officers/147/relationships?scenario=ce-33",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/scenics",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/strategies",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/literatures",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/api/v1/merits",
+          "status": 200,
+          "expected": 200,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/db/sam14.db",
+          "status": 404,
+          "expected": 404,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        },
+        {
+          "path": "/state.mjs",
+          "status": 200,
+          "expected": 200,
+          "mime": "text/javascript; charset=utf-8",
+          "pass": true
+        },
+        {
+          "check": "public_build_blocked",
+          "pass": true
+        },
+        {
+          "check": "public_entrypoint_maintenance",
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "package": "ce-r4-maintenance",
+      "manifest_sha256": "98e1c59c8a6d1f96bdcb5fb01dea59bd93478d959fcc3756c90cc0125b50dd85",
+      "checks": [
+        {
+          "path": "/api/v1/health",
+          "status": 503,
+          "expected": 503,
+          "mime": "application/json; charset=utf-8",
+          "pass": true
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "archive": {
+    "path": ".artifacts/packages/ce-r4-review.tgz",
+    "bytes": 34404188,
+    "sha256": "60e9388868f44d115eb888f4d99fc14e877f6ff5677948c6f85f3e992d53ebd5",
+    "members_verified": 18,
+    "remote_upload_verified": false
+  },
+  "screen_validation": "EXCLUDED_BY_USER",
+  "remote_deployment": "NOT_PERFORMED"
+}

@@ -1,0 +1,18 @@
+{
+    "head_sha":  "10038a2e02cb7ead1c3e03b035172f76088ab2ea",
+    "conclusion":  "success",
+    "url":  "https://github.com/jskim414/002-sam14-ce/actions/runs/35452291240",
+    "jobs":  [
+                 {
+                     "name":  "contracts (3.12)",
+                     "conclusion":  "success",
+                     "url":  "https://github.com/jskim414/002-sam14-ce/actions/runs/35452291240/job/105921424639"
+                 },
+                 {
+                     "name":  "contracts (3.14)",
+                     "conclusion":  "success",
+                     "url":  "https://github.com/jskim414/002-sam14-ce/actions/runs/35452291240/job/105921424816"
+                 }
+             ],
+    "scope":  "Synthetic contracts without game files; Python 3.12/3.14 and Node 22"
+}

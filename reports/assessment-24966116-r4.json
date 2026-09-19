@@ -1,0 +1,37 @@
+{
+  "database_sha256": "5a9e938d5d0132c034a2d5c2faacdeb474fb266088a33741e1274d509c533ee9",
+  "git_sha": "10038a2e02cb7ead1c3e03b035172f76088ab2ea",
+  "local_review_ready": true,
+  "checks": {
+    "source_identity": true,
+    "tests_identity": true,
+    "diff_identity": true,
+    "rebuild_identity": true,
+    "source_all_records": true,
+    "real_integration": true,
+    "baseline_diff": true,
+    "reproducibility": true,
+    "structural": true
+  },
+  "publication_ready": false,
+  "screen_validation": "EXCLUDED_BY_USER",
+  "remote_deployment": "NOT_PERFORMED",
+  "evidence_files": {
+    "source": {
+      "path": "reports/source-verification-24966116-r4-final.json",
+      "sha256": "2ab0092f538700eda1ef08709792c256d750ca247cb78b216062b754d14a09c6"
+    },
+    "tests": {
+      "path": "reports/checks-r4-final.json",
+      "sha256": "cf0a336d20773a48c8097a56145ad5992e34315ebce39fe02eefd9b5913a42f5"
+    },
+    "diff": {
+      "path": "reports/diff-r3-r4-final.json",
+      "sha256": "8c8860a83e948d60ca1de90fe66c77776b1b6d79b38324b1e7faef41994a4fcf"
+    },
+    "rebuild": {
+      "path": "reports/reproducibility-24966116-r4.json",
+      "sha256": "7e43782a64ad3f89b6995d52b1b5988e8b16514dd53366ceb99e3058faa6ce73"
+    }
+  }
+}

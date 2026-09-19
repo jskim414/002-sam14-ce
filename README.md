@@ -55,6 +55,8 @@ python scripts/benchmark_local.py --database db/ce-next.candidate.db --report re
 
 ## 근거
 
+- [r4 최종 실행 결과](plan/13-ce-r4-completion.md), [최종 검증 JSON](reports/completion-24966116-r4.json)
+- [외부 배포 검토안](docs/deployment-proposal-r4.md)
 - [DLC·신분·정책·추가 도감 분석](docs/dlc-and-catalog-analysis.md)
 - [릴리스 판정 규칙](docs/release-gates.md)
 - [구현 결과·미해결 항목](docs/implementation-status.md)
