@@ -1,7 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "python check_package.py --release",
-  "outputDirectory": "public",
   "git": {"deploymentEnabled": false},
   "functions": {"api/index.py": {"includeFiles": "{db/**,web/**,package-manifest.json}", "excludeFiles": "{check_package.py,run.py}"}},
   "rewrites": [{"source": "/(.*)", "destination": "/api/index"}]

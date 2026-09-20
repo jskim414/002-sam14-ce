@@ -53,5 +53,4 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--release',action='store_true');p.add_argument('--deploy',action='store_true');a=p.parse_args()
     root=Path(__file__).resolve().parent
     m=verify(root,a.release,a.deploy)
-    (root/'public').mkdir(exist_ok=True)
     print(json.dumps({'verified':True,'mode':m['mode'],'files':len(m['files'])}))

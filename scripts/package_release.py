@@ -29,6 +29,7 @@ def package(output,database=None,mode='release'):
     if mode=='public-review':
         config=json.loads((output/'vercel.json').read_text('utf-8'))
         config['buildCommand']='python check_package.py --deploy'
+        config['outputDirectory']='web/static'
         (output/'vercel.json').write_text(json.dumps(config,indent=2)+'\n',encoding='utf-8')
     (output/'.python-version').write_text('3.12\n',encoding='utf-8')
     (output/'requirements.txt').write_text('# Python standard library only\n',encoding='utf-8')
