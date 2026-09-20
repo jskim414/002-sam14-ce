@@ -56,6 +56,7 @@ server.serve_forever()
     if total>=450*1024*1024:raise ValueError('Package exceeds conservative 450 MiB budget')
     git=subprocess.run(['git','rev-parse','HEAD'],cwd=ROOT,capture_output=True,text=True)
     manifest={'format_version':2,'mode':mode,'git_sha':git.stdout.strip() or None,'files':files,'total_bytes':total,'database_sha256':sha256(database) if mode!='maintenance' else None,'public_deployment_performed':False}
+    manifest['vercel_config']=json.loads((output/'vercel.json').read_text('utf-8'))
     write_json(output/'package-manifest.json',manifest)
     verify(output,release=mode=='release')
     return manifest

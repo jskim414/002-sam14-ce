@@ -48,6 +48,16 @@ class PackagingTests(unittest.TestCase):
         with patch.dict('os.environ',{'VERCEL':'1'}):
             self.assertEqual(verify(source,deploy=True)['mode'],'public-review')
         lock.unlink();lock.parent.rmdir()
+        config_path=source/'vercel.json';original=config_path.read_text('utf-8')
+        config=json.loads(original)
+        config.update(name='sam14-db',version=2)
+        config_path.write_text(json.dumps(config,separators=(',',':')),encoding='utf-8')
+        with patch.dict('os.environ',{'VERCEL':'1'}):
+            self.assertEqual(verify(source,deploy=True)['mode'],'public-review')
+            config['buildCommand']='echo unexpected'
+            config_path.write_text(json.dumps(config),encoding='utf-8')
+            with self.assertRaisesRegex(ValueError,'configuration changed'):verify(source,deploy=True)
+        config_path.write_text(original,encoding='utf-8')
         with self.assertRaisesRegex(ValueError,'Publication blocked'):verify(source,release=True)
         spec=importlib.util.spec_from_file_location('ce_public_review_entry',ROOT/'api/index.py')
         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)

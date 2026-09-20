@@ -33,6 +33,13 @@ def verify(root,release=False,deploy=False):
     if actual!=expected:raise ValueError(f'Unexpected or missing package files: unexpected={sorted(actual-expected)}, missing={sorted(expected-actual)}')
     for rel,evidence in files.items():
         path=(root/rel).resolve(strict=True)
+        if rel=='vercel.json' and os.environ.get('VERCEL')=='1' and path.is_relative_to(root) and manifest.get('vercel_config'):
+            actual_config=json.loads(path.read_text('utf-8'))
+            # The CLI injects deployment metadata and reformats this JSON.
+            if 'name' not in manifest['vercel_config']:actual_config.pop('name',None)
+            if 'version' not in manifest['vercel_config'] and actual_config.get('version')==2:actual_config.pop('version')
+            if actual_config!=manifest['vercel_config']:raise ValueError('Vercel configuration changed: '+json.dumps(actual_config,sort_keys=True))
+            continue
         if not path.is_relative_to(root) or hashlib.sha256(path.read_bytes()).hexdigest()!=evidence['sha256'] or path.stat().st_size!=evidence['bytes']:raise ValueError('Package content mismatch: '+rel)
     if manifest['mode']=='maintenance':return manifest
     if manifest.get('database_sha256')!=files['db/sam14.db']['sha256']:raise ValueError('Database manifest identity mismatch')
