@@ -1,0 +1,100 @@
+{
+  "url": "https://sam14-db.vercel.app",
+  "authenticated": false,
+  "deployment_id": "dpl_6uDy9C7LrVw11qPK9Xc6Fp4Xvd2E",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "elapsed_seconds": 0.301,
+      "pass": true,
+      "content_matches": true
+    },
+    {
+      "path": "/app.js",
+      "status": 200,
+      "content_type": "application/javascript; charset=utf-8",
+      "elapsed_seconds": 0.082,
+      "pass": true,
+      "content_matches": true
+    },
+    {
+      "path": "/styles.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "elapsed_seconds": 0.507,
+      "pass": true,
+      "content_matches": true
+    },
+    {
+      "path": "/state.mjs",
+      "status": 200,
+      "content_type": "application/javascript; charset=utf-8",
+      "elapsed_seconds": 0.038,
+      "pass": true,
+      "content_matches": true
+    },
+    {
+      "path": "/vendor/qrcode.mjs",
+      "status": 200,
+      "content_type": "application/javascript; charset=utf-8",
+      "elapsed_seconds": 0.186,
+      "pass": true,
+      "content_matches": true
+    },
+    {
+      "path": "/api/v1/health",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "elapsed_seconds": 0.256,
+      "pass": true,
+      "health": {
+        "status": "ok",
+        "database": "read-only",
+        "schema_version": 5,
+        "release_id": "ce-ko-build-24966116-r4",
+        "build_id": "24966116",
+        "parser_sha256": "5d4e1a8108f6db7b91ba61892ee2858d1807e40b7833dde4eccbb1603d405339",
+        "release_ready": false
+      }
+    },
+    {
+      "path": "/api/v1/scenarios",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "elapsed_seconds": 0.234,
+      "pass": true,
+      "scenario_count": 52
+    },
+    {
+      "path": "/api/v1/officers?q=%EC%A1%B0%EC%A1%B0",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "elapsed_seconds": 0.229,
+      "pass": true
+    },
+    {
+      "path": "/db/sam14.db",
+      "status": 404,
+      "content_type": "application/json; charset=utf-8",
+      "elapsed_seconds": 0.235,
+      "pass": true
+    },
+    {
+      "path": "/package-manifest.json",
+      "status": 404,
+      "content_type": "application/json; charset=utf-8",
+      "elapsed_seconds": 0.245,
+      "pass": true
+    },
+    {
+      "path": "/web/queries.py",
+      "status": 404,
+      "content_type": "application/json; charset=utf-8",
+      "elapsed_seconds": 0.237,
+      "pass": true
+    }
+  ],
+  "pass": true
+}
