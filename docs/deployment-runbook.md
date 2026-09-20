@@ -1,6 +1,20 @@
 # CE 패키지·배포·복구 절차
 
-현재 상태는 LOCAL_REVIEW_ONLY다. 이 문서의 명령은 CE 폴더에서 실행한다. 현재 작업에서 외부 배포나 도메인 변경은 수행하지 않는다.
+2026-09-20 사용자 요청으로 공개 검토판 배포를 지원한다. 정식 출시 판정과 데이터 검증 표시는 유지한다. 아래 명령은 CE 폴더에서 실행한다.
+
+## 공개 검토판 업데이트
+
+GitHub `jskim414/002-sam14-ce`는 공개 코드 저장소다. DB는 Git에 포함하지 않으므로 Git push 자동 배포는 비활성화하고, 검증된 DB를 포함한 패키지를 CLI로 배포한다. 기존 `sam14-db` 프로젝트와 도메인을 사용한다.
+
+```powershell
+python scripts/run_checks.py --database db/ce-24966116-r4.final.db --report reports/checks-next-deployment.json
+python scripts/package_release.py --database db/ce-24966116-r4.final.db --mode public-review --output .artifacts/packages/ce-next-public
+python .artifacts/packages/ce-next-public/check_package.py --deploy
+npx vercel deploy .artifacts/packages/ce-next-public --project sam14-db --scope jskiming-gmailcoms-projects --archive=tgz --prod --skip-domain --yes
+npx vercel promote <검증한-배포-URL> --scope jskiming-gmailcoms-projects --yes
+```
+
+`public-review`는 구조 검증과 파일 해시 검사를 통과해야 하며, 실행 시 DB 해시도 확인한다. `release_ready`를 참으로 바꾸지 않는다. 기존 `review` 모드는 계속 로컬 전용이고 `--release`는 미해결 정식 출시 조건을 거부한다. `CE_MAINTENANCE=1`은 모든 모드에서 점검 응답을 강제한다. 원격 배포 후 홈페이지·API·모듈 MIME과 DB/소스 직접 다운로드 차단을 확인하고 도메인을 전환한다.
 
 ## 허용 파일 패키지
 

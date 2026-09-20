@@ -11,7 +11,7 @@ from check_package import verify
 def package(output,database=None,mode='release'):
     output=output_path(output)
     if not output.is_relative_to(ROOT/'.artifacts/packages'):raise ValueError('Package must be inside CE .artifacts/packages')
-    if mode not in ('release','review','maintenance'):raise ValueError('Invalid package mode')
+    if mode not in ('release','review','public-review','maintenance'):raise ValueError('Invalid package mode')
     if mode!='maintenance':
         if database is None:raise ValueError('Database required')
         database=database.resolve(strict=True)
@@ -26,6 +26,10 @@ def package(output,database=None,mode='release'):
         if not src.is_relative_to(ROOT):raise ValueError('Source escapes CE project')
         dst=output/rel;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(src,dst)
     shutil.copyfile(ROOT/'scripts/check_package.py',output/'check_package.py')
+    if mode=='public-review':
+        config=json.loads((output/'vercel.json').read_text('utf-8'))
+        config['buildCommand']='python check_package.py --deploy'
+        (output/'vercel.json').write_text(json.dumps(config,indent=2)+'\n',encoding='utf-8')
     (output/'.python-version').write_text('3.12\n',encoding='utf-8')
     (output/'requirements.txt').write_text('# Python standard library only\n',encoding='utf-8')
     if mode!='maintenance':
@@ -57,5 +61,5 @@ server.serve_forever()
     return manifest
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--database',type=Path);p.add_argument('--mode',choices=['release','review','maintenance'],default='release');a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--database',type=Path);p.add_argument('--mode',choices=['release','review','public-review','maintenance'],default='release');a=p.parse_args()
     m=package(a.output,a.database,a.mode);print(json.dumps({k:v for k,v in m.items() if k!='files'},indent=2))

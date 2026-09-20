@@ -72,3 +72,36 @@ test('DLC selection and new codices remain usable without officer filter buttons
   assert.match($('#results .level-effects').textContent,/개인 정책 레벨/);
   assert.match($('#results .level-effects').textContent,/단위/);
 });
+
+test('scenario changes are announced for selection and history navigation',async()=>{
+  history.replaceState({},'',base+'/?scenario=ce-05&force=1');window.dispatchEvent(new dom.window.PopStateEvent('popstate'));
+  const oldLabel=$('#scenario option[value="ce-05"]').textContent;
+  const newLabel=$('#scenario option[value="ce-32"]').textContent;
+  $('#scenario').value='ce-32';$('#scenario').dispatchEvent(new dom.window.Event('change',{bubbles:true}));
+  assert.equal(new URLSearchParams(location.search).get('scenario'),'ce-32');
+  assert.equal(new URLSearchParams(location.search).has('force'),false);
+  assert.equal($('#scenario-change').textContent,`${oldLabel} → ${newLabel}`);
+  assert.ok($('#scenario-notice').classList.contains('visible'));
+  assert.match($('#context-status').textContent,/세력 필터를 해제/);
+  history.replaceState({},'',base+'/?scenario=ce-05');window.dispatchEvent(new dom.window.PopStateEvent('popstate'));
+  assert.equal($('#scenario-change').textContent,`${newLabel} → ${oldLabel}`);
+});
+
+test('one-click reset applies immediately, preserves scenario and cancels pending search',async()=>{
+  history.replaceState({},'',base+'/?scenario=ce-32&tab=officers&q=조조&state=FREE&force=1&trait=14,196&trait_mode=any&kind=BONUS&policy=47&doctrine=1&formation=1&tactic=1&level_min=2&sort=strength&page=2&compare=147,521');
+  window.dispatchEvent(new dom.window.PopStateEvent('popstate'));
+  $('#q').value='관우';$('#q').dispatchEvent(new dom.window.Event('input',{bubbles:true}));
+  $('#reset-all-filters').click();
+  assert.equal(location.search,'?scenario=ce-32&tab=officers&compare=147%2C521');
+  assert.equal($('#q').value,'');assert.equal($('#sort').value,'name');
+  assert.equal($('#filter-count').textContent,'');
+  assert.equal($('[data-state=""]').getAttribute('aria-pressed'),'true');
+  await delay(200);assert.equal(new URLSearchParams(location.search).has('q'),false);
+  await until(()=>$('#count').textContent===(process.env.CE_TEST_DATABASE?'1,000명':'3명'));
+  $('#force').replaceChildren();
+  $('#filter-open').click();await until(()=>$('#filters').open&&$('#force').options.length>1);
+  assert.deepEqual([...$('#trait').selectedOptions].map(o=>o.value).filter(Boolean),[]);
+  assert.equal($('#filter-form [name="kind"]').value,'HISTORICAL');
+  $('#reset-filters').click();assert.equal($('#filters').open,false);
+  assert.equal(new URLSearchParams(location.search).get('scenario'),'ce-32');
+});

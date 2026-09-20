@@ -14,10 +14,12 @@ BASE_FILES={'api/index.py','web/queries.py','web/server.py','web/release_gate.py
 REVIEW_FILES={'db/sam14.db'}|{'web/static/'+name for name in ('index.html','styles.css','app.js','state.mjs',
                'vendor/qrcode.mjs','vendor/qrcode-LICENSE.txt','vendor/qrcode-provenance.json')}
 
-def verify(root,release=False):
+def verify(root,release=False,deploy=False):
     root=root.resolve();manifest=json.loads((root/'package-manifest.json').read_text('utf-8'))
     files=manifest['files']
-    if manifest.get('mode') not in ('maintenance','review','release'):raise ValueError('Invalid package mode')
+    if manifest.get('mode') not in ('maintenance','review','public-review','release'):raise ValueError('Invalid package mode')
+    if deploy and manifest['mode']=='review':raise ValueError('Local review package cannot be deployed')
+    if deploy and manifest['mode']=='release':release=True
     version=manifest.get('format_version',1)
     if version not in (1,2):raise ValueError('Unsupported package format version')
     base=BASE_FILES if version==2 else BASE_FILES-{'web/release_gate.py'}
@@ -37,6 +39,8 @@ def verify(root,release=False):
     return manifest
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--release',action='store_true');a=p.parse_args()
-    m=verify(Path(__file__).resolve().parent,a.release)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--release',action='store_true');p.add_argument('--deploy',action='store_true');a=p.parse_args()
+    root=Path(__file__).resolve().parent
+    m=verify(root,a.release,a.deploy)
+    (root/'public').mkdir(exist_ok=True)
     print(json.dumps({'verified':True,'mode':m['mode'],'files':len(m['files'])}))

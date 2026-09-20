@@ -11,9 +11,11 @@
 <div class="review-banner">로컬 검토판 <span>· 일부 데이터는 게임 화면 대조가 필요합니다.</span><button id="coverage">검증 범위</button></div>
 <main id="main">
   <section class="context"><label for="scenario">시나리오 시작 기준</label><select id="scenario" aria-label="CE 시나리오"></select><p>진행 중인 게임의 현재 상태와 다를 수 있습니다.</p></section>
+  <div id="scenario-notice" class="scenario-notice" role="status" aria-live="polite" aria-atomic="true"><strong>기준 시나리오 변경</strong><span id="scenario-change"></span></div>
   <section class="heading"><div><p class="eyebrow">OFFICER REFERENCE</p><h1 id="page-title">필요한 무장을, 바로.</h1><p id="page-description">능력부터 정책과 인간관계까지 살펴보세요.</p></div></section>
-  <div class="searchbar"><label class="sr-only" for="q">무장 이름 또는 자 검색</label><span aria-hidden="true">⌕</span><input id="q" type="search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggestions" placeholder="무장 이름 또는 자를 입력하세요" autocomplete="off"><button id="filter-open">필터 <span id="filter-count"></span></button></div>
+  <div class="search-tools"><div class="searchbar"><label class="sr-only" for="q">무장 이름 또는 자 검색</label><span aria-hidden="true">⌕</span><input id="q" type="search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggestions" placeholder="무장 이름 또는 자를 입력하세요" autocomplete="off"><button id="filter-open">필터 <span id="filter-count"></span></button><button id="reset-all-filters" title="검색어·필터·정렬을 기본값으로 초기화">필터 초기화</button></div>
   <div id="suggestions" role="listbox" aria-label="무장 검색 제안" hidden></div>
+  </div>
   <div class="quick"><button id="upcoming">등장 예정 모아보기</button><button id="save-search">검색 저장</button><button id="saved-searches">저장한 검색</button><button id="share-page">링크·QR</button></div>
   <p id="context-status" class="muted" role="status"></p>
   <div id="quick" class="quick"><button data-state="" aria-pressed="true">전체</button><button data-state="ACTIVE_FORCE">현역</button><button data-state="FREE">재야</button><button data-state="UNAPPEARED">미등장</button></div>

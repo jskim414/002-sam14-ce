@@ -1,6 +1,6 @@
 # 삼국지14 CE 무장 참조
 
-독립 CE 원천을 사용하는 **로컬 검토판**입니다. 내면 5종, 정책·구성 효과, 방향별 친애·혐오, 혼인·의형제, 전법을 제공합니다. 조조의 오산·패기웅심을 포함한 52개 시나리오를 해독했습니다. 외부 서비스 공개 조건과 원격 운영 검증이 남아 정식 공개는 Hold입니다. 화면 검증은 사용자 요청으로 제외했습니다.
+독립 CE 원천을 사용하는 **검토판**입니다. 내면 5종, 정책·구성 효과, 방향별 친애·혐오, 혼인·의형제, 전법을 제공합니다. 조조의 오산·패기웅심을 포함한 52개 시나리오를 해독했습니다. 공개 검토판 배포를 지원하며 정식 출시 검증 판정은 별도로 유지합니다. 화면 검증은 사용자 요청으로 제외했습니다.
 
 ## 실행
 
@@ -65,6 +65,6 @@ python scripts/benchmark_local.py --database db/ce-next.candidate.db --report re
 - [상세계획 11](plan/11-ce-product-redevelopment-plan.md)
 - [잔여 작업 수행 계획 12](plan/12-ce-remaining-work-plan.md)
 
-GitHub: [jskim414/002-sam14-ce](https://github.com/jskim414/002-sam14-ce) — 비공개 CE 전용 저장소입니다. 코드·계획·테스트·검증 보고서를 보존합니다.
+GitHub: [jskim414/002-sam14-ce](https://github.com/jskim414/002-sam14-ce) — 공개 CE 전용 저장소입니다. 코드·계획·테스트·검증 보고서를 보존합니다.
 
-원천·메시지 전문·해제 바이너리·Steam manifest·DB·백업은 GitHub 업로드에서 제외하고 로컬에 보관합니다. Vercel 프로젝트·도메인 연결·공개 배포는 만들지 않았습니다.
+원천·메시지 전문·해제 바이너리·Steam manifest·DB·백업은 GitHub 업로드에서 제외하고 로컬에 보관합니다. Vercel `sam14-db`에는 웹 실행 파일과 검증된 DB를 포함한 패키지를 배포합니다. DB가 없는 GitHub에서의 자동 배포는 비활성화되어 있습니다. 업데이트 명령은 [배포 절차](docs/deployment-runbook.md)를 참조하세요.

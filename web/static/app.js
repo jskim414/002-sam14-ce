@@ -15,6 +15,7 @@ favorites = cleanIds(favorites,100); recent = cleanIds(recent,20);
 let meta, scenarios, coverage, listController, detailController, listVersion = 0, detailVersion = 0;
 let total = 0, stashMode = 'favorites', codexKind = 'trait', composing = false, timer, activeDetail;
 let detailOrigin, lastListKey, suggestionController, suggestionVersion=0, comparisonController;
+let previousScenario, scenarioNoticeTimer;
 let savedSearches=read('searches',[]);
 if(!Array.isArray(savedSearches))savedSearches=[];
 savedSearches=savedSearches.filter(x=>x&&typeof x.name==='string'&&typeof x.query==='string').slice(0,20);
@@ -74,8 +75,34 @@ function card(row) {
 }
 function table(rows){return `<div class="table-wrap"><table class="officer-table"><thead><tr><th>무장 · 소속</th>${statLabels.map(x=>`<th>${x}</th>`).join('')}<th>주의 · 정책 · 레벨</th><th>보관·비교</th></tr></thead><tbody>${rows.map(r=>`<tr><td><button class="name-button" data-officer="${r.officer_id}">${esc(r.name)}</button><div class="subtitle">${esc(r.courtesy_name)} · ${esc(r.state_label)}<br>${esc(r.force_name||r.settlement_name||'위치 미확인')}</div></td>${statKeys.map(k=>`<td>${esc(r[k])}</td>`).join('')}<td>${policy(r)}</td><td>${favoriteButton(r.officer_id)}${itemActions(r.officer_id)}</td></tr>`).join('')}</tbody></table></div>`;}
 function setOptions(element,rows,placeholder,value) { element.innerHTML = `<option value="">${placeholder}</option>`+rows.map(r=>`<option value="${esc(r.id)}">${esc(r.name)}</option>`).join('');element.value=value || ''; }
+function scenarioLabel(id) {
+  const row=scenarios.items.find(s=>s.id===id);
+  return row?`${row.name}${row.start_year?' · '+row.start_year+'년 '+row.start_month+'월':''}`:id;
+}
+function announceScenarioChange() {
+  const current=scenarioId();
+  if(previousScenario&&previousScenario!==current){
+    window.clearTimeout(scenarioNoticeTimer);
+    $('#scenario-change').textContent=`${scenarioLabel(previousScenario)} → ${scenarioLabel(current)}`;
+    $('#scenario-notice').classList.add('visible');
+    $('.context').classList.add('scenario-changed');
+    scenarioNoticeTimer=window.setTimeout(()=>{
+      $('#scenario-notice').classList.remove('visible');
+      $('.context').classList.remove('scenario-changed');
+    },6000);
+  }
+  previousScenario=current;
+}
+function resetFilters() {
+  clearTimeout(timer);hideSuggestions();
+  if($('#filters').open)$('#filters').close();
+  const changes=Object.fromEntries([...filterKeys,'q','sort','order','page','officer'].map(key=>[key,null]));
+  navigate(changes);
+  $('#context-status').textContent='검색어와 필터, 정렬을 초기화했습니다.';
+}
 function syncControls() {
   const p=params();$('#q').value=p.get('q')||'';$('#scenario').value=scenarioId();$('#sort').value=p.get('sort')||'name';
+  announceScenarioChange();
   $('#page-title').textContent={officers:'필요한 무장을, 바로.',codex:'특징에서 무장으로.',stash:'다시 찾는 무장들.'}[tab()] || '무장 참조';
   $('#page-description').textContent={officers:'능력부터 정책과 인간관계까지 살펴보세요.',codex:'개성·정책·전법과 CE 명승·방책·시문·공로을 살펴보세요.',stash:'이 기기에서 저장하거나 최근 살펴본 무장입니다.'}[tab()] || '';
   $('#q').placeholder=tab()==='codex'?'도감 이름을 입력하세요':'무장 이름 또는 자를 입력하세요';
@@ -225,7 +252,7 @@ document.addEventListener('click',async event=>{
   if(filter){const [kind,id]=filter.split(':');navigate({tab:'officers',[kind]:id,q:null,page:null,officer:null});return;}
   if(b.dataset.filterTrait){navigate({trait:b.dataset.filterTrait,page:null});return;}
   if(b.id==='filter-open')await openFilters();
-  if(b.id==='reset-filters'){for(const key of filterKeys){const c=$(`#filter-form [name="${key}"]`);if(c?.multiple)[...c.options].forEach(o=>o.selected=false);else if(c)c.value=key==='kind'?'HISTORICAL':key==='trait_mode'?'all':'';}}
+  if(b.id==='reset-filters'||b.id==='reset-all-filters'){resetFilters();return;}
   if(b.id==='previous')navigate({page:Math.max(1,Number(params().get('page')||1)-1)});
   if(b.id==='next')navigate({page:Number(params().get('page')||1)+1});
   if(b.id==='retry'){cache.clear();lastListKey=null;if(meta)render();else initialize();}
@@ -237,7 +264,7 @@ document.addEventListener('click',async event=>{
 });
 $('#detail').addEventListener('cancel',e=>{e.preventDefault();closeDetail();});
 $('#filter-form').addEventListener('submit',e=>{e.preventDefault();const changes=Object.fromEntries(new FormData(e.target));changes.trait=[...$('#trait').selectedOptions].map(x=>x.value).filter(Boolean).join(',');if(changes.trait_mode==='all')changes.trait_mode='';changes.page=null;$('#filters').close();navigate(changes);});
-$('#scenario').addEventListener('change',()=>{hideSuggestions();if(params().has('force'))$('#context-status').textContent='시나리오가 바뀌어 이전 세력 필터를 해제했습니다.';navigate({scenario:$('#scenario').value,force:null,page:null,officer:null});});
+$('#scenario').addEventListener('change',()=>{clearTimeout(timer);hideSuggestions();$('#context-status').textContent=params().has('force')?'시나리오가 바뀌어 이전 세력 필터를 해제했습니다.':'';navigate({scenario:$('#scenario').value,force:null,page:null,officer:null});});
 $('#sort').addEventListener('change',()=>navigate({sort:$('#sort').value,page:null}));
 function search(){clearTimeout(timer);timer=setTimeout(()=>{if(!composing){navigate({q:$('#q').value,page:null},{replace:true});suggest();}},150);}
 $('#q').addEventListener('compositionstart',()=>{composing=true;clearTimeout(timer);});

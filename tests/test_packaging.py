@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
@@ -37,3 +38,19 @@ class PackagingTests(unittest.TestCase):
         spec=importlib.util.spec_from_file_location('ce_deployment_entry',ROOT/'api/index.py')
         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
         self.assertIs(module.handler,module.MaintenanceHandler)
+    def test_public_review_is_explicit_and_preserves_release_gate(self):
+        source=self.root/'public-review'
+        package(source,self.database,mode='public-review')
+        self.assertEqual(verify(source,deploy=True)['mode'],'public-review')
+        with self.assertRaisesRegex(ValueError,'Publication blocked'):verify(source,release=True)
+        spec=importlib.util.spec_from_file_location('ce_public_review_entry',ROOT/'api/index.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        with patch.object(module,'ROOT',source):
+            self.assertIsNot(module.select_handler(),module.MaintenanceHandler)
+            with patch.dict('os.environ',{'CE_MAINTENANCE':'1'}):
+                self.assertIs(module.select_handler(),module.MaintenanceHandler)
+            with (source/'db/sam14.db').open('ab') as stream:stream.write(b'tampered')
+            self.assertIs(module.select_handler(),module.MaintenanceHandler)
+        local=self.root/'local-review'
+        package(local,self.database,mode='review')
+        with self.assertRaisesRegex(ValueError,'cannot be deployed'):verify(local,deploy=True)
