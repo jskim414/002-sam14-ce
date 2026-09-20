@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import sqlite3
 from contextlib import closing
@@ -26,7 +27,10 @@ def verify(root,release=False,deploy=False):
     allowed=base if manifest['mode']=='maintenance' else base|REVIEW_FILES
     if set(files)!=allowed:raise ValueError('Unexpected or missing allowlisted package files')
     actual={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file() and '__pycache__' not in p.parts and '.vercel' not in p.parts}
-    if actual!=set(files)|{'package-manifest.json'}:raise ValueError('Unexpected or missing package files')
+    # Vercel's Python installer creates this empty lock before the build command.
+    if os.environ.get('VERCEL')=='1':actual.discard('.vercel_python_packages/.lock')
+    expected=set(files)|{'package-manifest.json'}
+    if actual!=expected:raise ValueError(f'Unexpected or missing package files: unexpected={sorted(actual-expected)}, missing={sorted(expected-actual)}')
     for rel,evidence in files.items():
         path=(root/rel).resolve(strict=True)
         if not path.is_relative_to(root) or hashlib.sha256(path.read_bytes()).hexdigest()!=evidence['sha256'] or path.stat().st_size!=evidence['bytes']:raise ValueError('Package content mismatch: '+rel)

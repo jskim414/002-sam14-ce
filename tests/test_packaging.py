@@ -42,6 +42,12 @@ class PackagingTests(unittest.TestCase):
         source=self.root/'public-review'
         package(source,self.database,mode='public-review')
         self.assertEqual(verify(source,deploy=True)['mode'],'public-review')
+        lock=source/'.vercel_python_packages/.lock'
+        lock.parent.mkdir();lock.touch()
+        with self.assertRaisesRegex(ValueError,'Unexpected'):verify(source,deploy=True)
+        with patch.dict('os.environ',{'VERCEL':'1'}):
+            self.assertEqual(verify(source,deploy=True)['mode'],'public-review')
+        lock.unlink();lock.parent.rmdir()
         with self.assertRaisesRegex(ValueError,'Publication blocked'):verify(source,release=True)
         spec=importlib.util.spec_from_file_location('ce_public_review_entry',ROOT/'api/index.py')
         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
