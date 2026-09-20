@@ -41,4 +41,12 @@ def select_handler():
         return make_handler(service)
     except Exception:return MaintenanceHandler
 
-handler=select_handler()
+_selected_handler=select_handler()
+
+class handler(BaseHTTPRequestHandler):
+    """Explicit class export for Vercel's Python entrypoint discovery."""
+    def do_GET(self):
+        return _selected_handler.do_GET(self)
+
+    def send(self,*args,**kwargs):
+        return _selected_handler.send(self,*args,**kwargs)

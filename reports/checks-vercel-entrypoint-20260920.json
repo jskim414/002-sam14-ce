@@ -1,0 +1,18 @@
+{
+  "pass": true,
+  "mode": "REAL_INTEGRATION",
+  "database_sha256": "5a9e938d5d0132c034a2d5c2faacdeb474fb266088a33741e1274d509c533ee9",
+  "test_suite_sha256": "b9089d3a89ae936bb77594a1ea2c534fec6897ce7dcf3ddae4f8a0fa75937bd5",
+  "python_version": "3.14.6",
+  "python": {
+    "run": 38,
+    "passed": 38,
+    "failures": 0,
+    "errors": 0,
+    "skipped": []
+  },
+  "javascript_exit_code": 0,
+  "syntax_exit_code": 0,
+  "screen_validation": "EXCLUDED_BY_USER",
+  "git_sha": "86f10fa8f423bf947e0c6f6cc785b048d021ab36"
+}

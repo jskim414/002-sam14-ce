@@ -37,7 +37,7 @@ class PackagingTests(unittest.TestCase):
     def test_missing_database_entrypoint_fails_closed(self):
         spec=importlib.util.spec_from_file_location('ce_deployment_entry',ROOT/'api/index.py')
         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
-        self.assertIs(module.handler,module.MaintenanceHandler)
+        self.assertIs(module.select_handler(),module.MaintenanceHandler)
     def test_public_review_is_explicit_and_preserves_release_gate(self):
         source=self.root/'public-review'
         package(source,self.database,mode='public-review')
